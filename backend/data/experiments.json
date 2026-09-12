@@ -1,0 +1,816 @@
+{
+  "snapshot": "mvp-v1",
+  "validated_by_human": false,
+  "substances": [
+    {
+      "key": "h2o",
+      "nameEs": "Agua destilada",
+      "formula": "H2O",
+      "state": "L",
+      "molar_mass": 18.015,
+      "density": 1,
+      "strong": null,
+      "color": "#bfe3ff"
+    },
+    {
+      "key": "hcl",
+      "nameEs": "Ácido clorhídrico (solución)",
+      "formula": "HCl",
+      "state": "L",
+      "molar_mass": 36.46,
+      "concentrations": [
+        0.1,
+        1,
+        2,
+        6
+      ],
+      "strong": "acid",
+      "color": "#e6f7ff"
+    },
+    {
+      "key": "naoh",
+      "nameEs": "Hidróxido de sodio (solución)",
+      "formula": "NaOH",
+      "state": "L",
+      "molar_mass": 39.997,
+      "concentrations": [
+        0.1,
+        1,
+        2
+      ],
+      "strong": "base",
+      "color": "#e8f5e9"
+    },
+    {
+      "key": "h2so4",
+      "nameEs": "Ácido sulfúrico (solución)",
+      "formula": "H2SO4",
+      "state": "L",
+      "molar_mass": 98.079,
+      "concentrations": [
+        0.5,
+        1,
+        2
+      ],
+      "strong": "acid",
+      "substance_protons": 2,
+      "color": "#f0f0f0"
+    },
+    {
+      "key": "ch3cooh",
+      "nameEs": "Ácido acético (vinagre)",
+      "formula": "CH3COOH",
+      "state": "L",
+      "molar_mass": 60.052,
+      "concentrations": [
+        0.1,
+        1,
+        3
+      ],
+      "strong": null,
+      "color": "#fff8e1"
+    },
+    {
+      "key": "nahco3",
+      "nameEs": "Bicarbonato de sodio",
+      "formula": "NaHCO3",
+      "state": "S",
+      "molar_mass": 84.007,
+      "strong": "base",
+      "color": "#ffffff"
+    },
+    {
+      "key": "caco3",
+      "nameEs": "Carbonato de calcio (tiza)",
+      "formula": "CaCO3",
+      "state": "S",
+      "molar_mass": 100.087,
+      "strong": null,
+      "color": "#f3f3f3"
+    },
+    {
+      "key": "na2co3",
+      "nameEs": "Carbonato de sodio",
+      "formula": "Na2CO3",
+      "state": "S",
+      "molar_mass": 105.988,
+      "strong": "base",
+      "color": "#ffffff"
+    },
+    {
+      "key": "nacl",
+      "nameEs": "Cloruro de sodio (solución)",
+      "formula": "NaCl",
+      "state": "L",
+      "molar_mass": 58.44,
+      "concentrations": [
+        0.1,
+        1,
+        2
+      ],
+      "strong": null,
+      "color": "#f4f9ff"
+    },
+    {
+      "key": "agno3",
+      "nameEs": "Nitrato de plata (solución)",
+      "formula": "AgNO3",
+      "state": "L",
+      "molar_mass": 169.873,
+      "concentrations": [
+        0.05,
+        0.1,
+        0.5
+      ],
+      "strong": null,
+      "color": "#ffffff"
+    },
+    {
+      "key": "bacl2",
+      "nameEs": "Cloruro de bario (solución)",
+      "formula": "BaCl2",
+      "state": "L",
+      "molar_mass": 208.23,
+      "concentrations": [
+        0.1,
+        0.5,
+        1
+      ],
+      "strong": null,
+      "color": "#ffffff"
+    },
+    {
+      "key": "na2so4",
+      "nameEs": "Sulfato de sodio (solución)",
+      "formula": "Na2SO4",
+      "state": "L",
+      "molar_mass": 142.04,
+      "concentrations": [
+        0.1,
+        0.5,
+        1
+      ],
+      "strong": null,
+      "color": "#ffffff"
+    },
+    {
+      "key": "ki",
+      "nameEs": "Yoduro de potasio (solución)",
+      "formula": "KI",
+      "state": "L",
+      "molar_mass": 166.003,
+      "concentrations": [
+        0.1,
+        0.5,
+        1
+      ],
+      "strong": null,
+      "color": "#ffffff"
+    },
+    {
+      "key": "pbno32",
+      "nameEs": "Nitrato de plomo (II)",
+      "formula": "Pb(NO3)2",
+      "state": "L",
+      "molar_mass": 331.21,
+      "concentrations": [
+        0.05,
+        0.1,
+        0.5
+      ],
+      "strong": null,
+      "color": "#ffffff"
+    },
+    {
+      "key": "cuso4",
+      "nameEs": "Sulfato de cobre (II)",
+      "formula": "CuSO4",
+      "state": "L",
+      "molar_mass": 159.609,
+      "concentrations": [
+        0.1,
+        0.5,
+        1
+      ],
+      "strong": null,
+      "color": "#4a8fe7"
+    },
+    {
+      "key": "zn",
+      "nameEs": "Zinc (granalla)",
+      "formula": "Zn",
+      "state": "S",
+      "molar_mass": 65.38,
+      "strong": null,
+      "color": "#9aaa9a"
+    },
+    {
+      "key": "cu",
+      "nameEs": "Cobre (laminado)",
+      "formula": "Cu",
+      "state": "S",
+      "molar_mass": 63.546,
+      "strong": null,
+      "color": "#d28a3c"
+    },
+    {
+      "key": "fe",
+      "nameEs": "Hierro (limadura)",
+      "formula": "Fe",
+      "state": "S",
+      "molar_mass": 55.845,
+      "strong": null,
+      "color": "#8b8f95"
+    },
+    {
+      "key": "nh3",
+      "nameEs": "Amoníaco (solución)",
+      "formula": "NH3",
+      "state": "L",
+      "molar_mass": 17.031,
+      "concentrations": [
+        0.5,
+        1,
+        2
+      ],
+      "strong": "base",
+      "color": "#f1f8e9"
+    },
+    {
+      "key": "h2o2",
+      "nameEs": "Peróxido de hidrógeno (agua oxigenada)",
+      "formula": "H2O2",
+      "state": "L",
+      "molar_mass": 34.015,
+      "concentrations": [
+        0.88,
+        3
+      ],
+      "strong": null,
+      "color": "#e3f2fd"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "exp-acidobase-hcl-naoh",
+      "titleEs": "Valoración: ácido clorhídrico + hidróxido de sodio",
+      "level": [
+        "bachillerato",
+        "universidad"
+      ],
+      "topic": "acid_base",
+      "reactants": [
+        "hcl",
+        "naoh"
+      ],
+      "equation": "HCl + NaOH -> NaCl + H2O",
+      "effects": [
+        {
+          "type": "exothermic",
+          "note": "Reacción de neutralización que libera calor (dT estimado)."
+        },
+        {
+          "type": "ph_change",
+          "target": 7,
+          "note": "Neutralización completa de ácido fuerte y base fuerte."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "hcl",
+          "volume_ml": 50
+        },
+        {
+          "action": "titrate",
+          "substance": "naoh",
+          "note": "Añade la base con la bureta hasta neutralizar (indicador si lo usas)."
+        }
+      ],
+      "explanation": "Los iones H+ y OH- se combinan formando agua; los iones restantes (Na+ y Cl-) quedan en disolución como sales. Ácido fuerte + base fuerte neutralizan por completo.",
+      "safety": "Simulación educativa. En laboratorio real: gafas, bata y campana para ácidos concentrados.",
+      "dH_reference_kj_per_mol": -57.2,
+      "gas": null
+    },
+    {
+      "id": "exp-acidobase-h2so4",
+      "titleEs": "Neutralización con ácido sulfúrico 1 M",
+      "level": "bachillerato",
+      "topic": "acid_base",
+      "reactants": [
+        "h2so4",
+        "naoh"
+      ],
+      "equation": "H2SO4 + 2 NaOH -> Na2SO4 + 2 H2O",
+      "effects": [
+        {
+          "type": "exothermic"
+        },
+        {
+          "type": "ph_change",
+          "target": 7
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "h2so4",
+          "volume_ml": 25
+        },
+        {
+          "action": "add_solution",
+          "substance": "naoh",
+          "volume_ml": 50,
+          "note": "Dos moles de base por cada mol de ácido (diprótico)."
+        }
+      ],
+      "explanation": "El ácido sulfúrico tiene 2 protones por molécula; por eso hacen falta el doble de moles de NaOH.",
+      "safety": "H2SO4 concentrado es corrosivo. Aquí siempre es una simulación.",
+      "dH_reference_kj_per_mol": -111.7,
+      "gas": null
+    },
+    {
+      "id": "exp-acidobase-acetico",
+      "titleEs": "Ácido acético (vinagre) + hidróxido de sodio",
+      "level": [
+        "bachillerato",
+        "universidad"
+      ],
+      "topic": "acid_base",
+      "reactants": [
+        "ch3cooh",
+        "naoh"
+      ],
+      "equation": "CH3COOH + NaOH -> CH3COONa + H2O",
+      "effects": [
+        {
+          "type": "ph_change",
+          "target": "≈8.9",
+          "note": "El punto de equivalencia de un ácido débil con base fuerte es básico (>7)."
+        },
+        {
+          "type": "exothermic",
+          "note": "dT menor que con ácido fuerte."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "ch3cooh",
+          "volume_ml": 30
+        },
+        {
+          "action": "add_solution",
+          "substance": "naoh",
+          "volume_ml": 30
+        }
+      ],
+      "explanation": "El ácido acético es un ácido débil: no se disocia del todo. Su punto de equivalencia es básico porque el ion acetato hidroliza.",
+      "safety": "Segura en simulador; el vinagre real es suave, pero trabaja siempre con supervisión.",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-gases-caco3-hcl",
+      "titleEs": "Volcán de tiza: carbonato de calcio + HCl",
+      "level": [
+        "bachillerato",
+        "universidad"
+      ],
+      "topic": "double_displacement",
+      "reactants": [
+        "caco3",
+        "hcl"
+      ],
+      "equation": "CaCO3 + 2 HCl -> CaCl2 + CO2 + H2O",
+      "effects": [
+        {
+          "type": "gas",
+          "species": "CO2",
+          "note": "Efervescencia: desprendimiento de dióxido de carbono."
+        },
+        {
+          "type": "color",
+          "note": "Disolución inicial ligeramente turbia que se aclara al disolverse."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solid",
+          "substance": "caco3",
+          "mass_g": 2
+        },
+        {
+          "action": "add_solution",
+          "substance": "hcl",
+          "volume_ml": 40,
+          "note": "Observa la efervescencia inmediata."
+        }
+      ],
+      "explanation": "El ácido reacciona con el carbonato liberando CO2 (g). Cuantos más moles de HCl, más gas (reactivo limitante aquí: CaCO3).",
+      "safety": "Amplia efervescencia; nunca en recipiente cerrado (presión).",
+      "dH_reference_kj_per_mol": null,
+      "gas": "CO2"
+    },
+    {
+      "id": "exp-gases-nahco3-acetico",
+      "titleEs": "Volcán de bicarbonato + vinagre",
+      "level": "bachillerato",
+      "topic": "acid_base",
+      "reactants": [
+        "nahco3",
+        "ch3cooh"
+      ],
+      "equation": "NaHCO3 + CH3COOH -> CH3COONa + H2O + CO2",
+      "effects": [
+        {
+          "type": "gas",
+          "species": "CO2",
+          "intensity": "high",
+          "note": "Efervescencia abundante y espuma."
+        },
+        {
+          "type": "exothermic",
+          "note": "Liberación suave de calor."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solid",
+          "substance": "nahco3",
+          "mass_g": 5
+        },
+        {
+          "action": "add_solution",
+          "substance": "ch3cooh",
+          "volume_ml": 30
+        }
+      ],
+      "explanation": "Bicarbonato (base débil) + ácido acético (ácido débil) liberan CO2: es la reacción del clásico volcán de cocina.",
+      "safety": "Segura: vinagre y bicarbonato son de uso doméstico; aun así nunca mezclar en recipiente cerrado.",
+      "dH_reference_kj_per_mol": null,
+      "gas": "CO2"
+    },
+    {
+      "id": "exp-gases-zn-hcl",
+      "titleEs": "Zinc + ácido clorhídrico (desprendimiento de H2)",
+      "level": "bachillerato",
+      "topic": "redox",
+      "reactants": [
+        "zn",
+        "hcl"
+      ],
+      "equation": "Zn + 2 HCl -> ZnCl2 + H2",
+      "effects": [
+        {
+          "type": "gas",
+          "species": "H2",
+          "note": "Burbujeo de hidrógeno gas."
+        },
+        {
+          "type": "exothermic"
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solid",
+          "substance": "zn",
+          "mass_g": 1.5
+        },
+        {
+          "action": "add_solution",
+          "substance": "hcl",
+          "volume_ml": 50
+        }
+      ],
+      "explanation": "Redox: el Zn se oxida (0 → +2) y el H+ se reduce a H2. Nada de fuego en el simulador: el H2 es inflamable en la realidad.",
+      "safety": "El hidrógeno es inflamable; en laboratorio real jamás acercar llama.",
+      "dH_reference_kj_per_mol": null,
+      "gas": "H2"
+    },
+    {
+      "id": "exp-precipitacion-agno3-nacl",
+      "titleEs": "Cloruro de plata: AgNO3 + NaCl",
+      "level": [
+        "bachillerato",
+        "universidad"
+      ],
+      "topic": "precipitation",
+      "reactants": [
+        "agno3",
+        "nacl"
+      ],
+      "equation": "AgNO3 + NaCl -> AgCl(precipitado) + NaNO3",
+      "effects": [
+        {
+          "type": "precipitate",
+          "colorHex": "#e7e9ec",
+          "note": "Precipitado blanco insoluble de AgCl."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "agno3",
+          "volume_ml": 20
+        },
+        {
+          "action": "add_solution",
+          "substance": "nacl",
+          "volume_ml": 20,
+          "note": "La nube blanca aparece al instante."
+        }
+      ],
+      "explanation": "Metátesis: se forman nuevas sales; AgCl es muy insoluble (bajo Kps) y cae como sólido.",
+      "safety": "La plata es costosa y las sales de plata manchan (simulada).",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-precipitacion-bacl2-na2so4",
+      "titleEs": "Sulfato de bario: BaCl2 + Na2SO4",
+      "level": "bachillerato",
+      "topic": "precipitation",
+      "reactants": [
+        "bacl2",
+        "na2so4"
+      ],
+      "equation": "BaCl2 + Na2SO4 -> BaSO4 + NaCl",
+      "effects": [
+        {
+          "type": "precipitate",
+          "colorHex": "#f5f7f9",
+          "note": "Precipitado blanco denso."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "bacl2",
+          "volume_ml": 25
+        },
+        {
+          "action": "add_solution",
+          "substance": "na2so4",
+          "volume_ml": 25
+        }
+      ],
+      "explanation": "BaSO4 es un sólido blanco muy insoluble usado como contraste en radiología.",
+      "safety": "Sales de bario solubles son tóxicas; aquí solo se simula el precipitado insoluble. Nunca ingerir.",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-precipitacion-ki-pbno32",
+      "titleEs": "Yoduro de plomo (lluvia dorada): Pb(NO3)2 + KI",
+      "level": [
+        "bachillerato",
+        "universidad"
+      ],
+      "topic": "precipitation",
+      "reactants": [
+        "pbno32",
+        "ki"
+      ],
+      "equation": "Pb(NO3)2 + KI -> PbI2 + KNO3",
+      "effects": [
+        {
+          "type": "precipitate",
+          "colorHex": "#f5c542",
+          "note": "Precipitado amarillo brillante (PbI2)."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "pbno32",
+          "volume_ml": 20
+        },
+        {
+          "action": "add_solution",
+          "substance": "ki",
+          "volume_ml": 40,
+          "note": "Dos moles de KI por mol de nitrato de plomo."
+        }
+      ],
+      "explanation": "El yoduro de plomo precipita en amarillo; al calentarlo se disuelve y al enfriar cristaliza en partículas brillantes ('lluvia dorada').",
+      "safety": "Los compuestos de plomo son tóxicos; estrictamente simulados, sin contacto.",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-precipitacion-cuso4-naoh",
+      "titleEs": "Hidróxido de cobre (II): CuSO4 + NaOH",
+      "level": "bachillerato",
+      "topic": "precipitation",
+      "reactants": [
+        "cuso4",
+        "naoh"
+      ],
+      "equation": "CuSO4 + NaOH -> Cu(OH)2 + Na2SO4",
+      "effects": [
+        {
+          "type": "precipitate",
+          "colorHex": "#5f9ce8",
+          "note": "Precipitado azul gelloso de Cu(OH)2."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "cuso4",
+          "volume_ml": 30
+        },
+        {
+          "action": "add_solution",
+          "substance": "naoh",
+          "volume_ml": 30
+        }
+      ],
+      "explanation": "La solución azul clara de CuSO4 forma un sólido azul al añadir ion hidróxido: típica prueba de química inorgánica.",
+      "safety": "Completamente simulado; los iones de cobre en la realidad requieren manejo responsable.",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-redox-h2o2-ki",
+      "titleEs": "Pasta de dientes de elefante (H2O2 + KI catálisis)",
+      "level": [
+        "bachillerato",
+        "universidad"
+      ],
+      "topic": "redox",
+      "reactants": [
+        "h2o2",
+        "ki"
+      ],
+      "equation": "H2O2 -> H2O + O2",
+      "effects": [
+        {
+          "type": "gas",
+          "species": "O2",
+          "intensity": "explosive",
+          "note": "Liberación súbita de oxígeno que genera espuma abundante."
+        },
+        {
+          "type": "exothermic"
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "h2o2",
+          "volume_ml": 30
+        },
+        {
+          "action": "catalyst",
+          "substance": "ki",
+          "note": "Al añadir el catalizador KI, la descomposición se acelera bruscamente.",
+          "drops": 5
+        }
+      ],
+      "explanation": "El KI cataliza la descomposición del peróxido: 2 H2O2 → 2 H2O + O2. El oxígeno atrapado por el detergente crea la espuma gigante.",
+      "safety": "Klásico pero siempre con gafas; la espuma contiene peróxido residual que puede irritar.",
+      "dH_reference_kj_per_mol": null,
+      "gas": "O2"
+    },
+    {
+      "id": "exp-redox-zn-cuso4",
+      "titleEs": "Desplazamiento: zinc + sulfato de cobre",
+      "level": "bachillerato",
+      "topic": "redox",
+      "reactants": [
+        "zn",
+        "cuso4"
+      ],
+      "equation": "Zn + CuSO4 -> ZnSO4 + Cu",
+      "effects": [
+        {
+          "type": "color",
+          "note": "La solución azul palidece; el zinc se recubre de cobre rojizo."
+        },
+        {
+          "type": "exothermic"
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "cuso4",
+          "volume_ml": 40
+        },
+        {
+          "action": "add_solid",
+          "substance": "zn",
+          "mass_g": 1
+        }
+      ],
+      "explanation": "El zinc es más reductor que el cobre: cede electrones y disuelve como Zn2+, depositando cobre metálico.",
+      "safety": "Reacción segura simulada; la serie de actividad metálica explica por qué ocurre.",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-redox-cu-agno3",
+      "titleEs": "Árbol de plata: Cu + AgNO3",
+      "level": "bachillerato",
+      "topic": "redox",
+      "reactants": [
+        "cu",
+        "agno3"
+      ],
+      "equation": "Cu + AgNO3 -> Cu(NO3)2 + Ag",
+      "effects": [
+        {
+          "type": "color",
+          "note": "La solución toma tono azul (Cu2+) y la plata crece como cristales grises."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "agno3",
+          "volume_ml": 30
+        },
+        {
+          "action": "add_solid",
+          "substance": "cu",
+          "mass_g": 1
+        }
+      ],
+      "explanation": "El cobre reduce Ag+ a Ag metálico y se oxida a Cu2+ (color azul). La plata se deposita ramificada.",
+      "safety": "Simulación: la plata y sus sales manchan nuestra piel de forma persistente en la realidad.",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-gases-na2co3-hcl",
+      "titleEs": "Carbonato de sodio + HCl (efervescencia)",
+      "level": "bachillerato",
+      "topic": "double_displacement",
+      "reactants": [
+        "na2co3",
+        "hcl"
+      ],
+      "equation": "Na2CO3 + 2 HCl -> 2 NaCl + H2O + CO2",
+      "effects": [
+        {
+          "type": "gas",
+          "species": "CO2",
+          "note": "Efervescencia inmediata."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solid",
+          "substance": "na2co3",
+          "mass_g": 2
+        },
+        {
+          "action": "add_solution",
+          "substance": "hcl",
+          "volume_ml": 40
+        }
+      ],
+      "explanation": "El carbonato reacciona con el ácido produciendo CO2 (g); el sodio pasa a sal de cloruro.",
+      "safety": "Segura simulada; efervescencia moderada real.",
+      "dH_reference_kj_per_mol": null,
+      "gas": "CO2"
+    },
+    {
+      "id": "exp-pressure-nh3-hcl",
+      "titleEs": "Humo blanco: NH3 + HCl (cloruro de amonio)",
+      "level": "universidad",
+      "topic": "acid_base",
+      "reactants": [
+        "nh3",
+        "hcl"
+      ],
+      "equation": "NH3 + HCl -> NH4Cl",
+      "effects": [
+        {
+          "type": "precipitate",
+          "colorHex": "#eef3f8",
+          "note": "Neblina/humo blanco de NH4Cl (aerosol sólido)."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "nh3",
+          "volume_ml": 15
+        },
+        {
+          "action": "add_solution",
+          "substance": "hcl",
+          "volume_ml": 15,
+          "note": "Si los vapores se combinan, ves humo blanco."
+        }
+      ],
+      "explanation": "El amoníaco (base gaseosa) y el HCl (ácido) forman una sal sólida en aerosol: NH4Cl blanco.",
+      "safety": "Nunca oler directamente los vapores; en el simulador es seguro.",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    }
+  ]
+}

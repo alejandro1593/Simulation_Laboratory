@@ -1,0 +1,36 @@
+# Dependencias / node
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Entornos
+.env
+.env.local
+.env.*.local
+
+# Datos locales
+*.db
+*.sqlite3
+data/*.snapshot.json
+
+# Editor/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Builds
+dist/
+build/
+*.tsbuildinfo

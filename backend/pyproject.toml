@@ -1,0 +1,20 @@
+[project]
+name = "molcore-backend"
+version = "0.1.0"
+description = "MolCore Lab backend — plataforma educativa de química"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# Depends(...) en argumentos por defecto es el patrón de FastAPI
+"app/**" = ["B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
