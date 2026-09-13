@@ -59,6 +59,8 @@ export default function SimulatorPage() {
   const [unit, setUnit] = useState<AddItem["unit"]>("mL");
   const [value, setValue] = useState("30");
   const [prodIdx, setProdIdx] = useState(0);
+  const [historial, setHistorial] = useState<{ id: string; title: string; equation: string; at: string }[]>([]);
+  const [showHist, setShowHist] = useState(false);
 
   useEffect(() => {
     api<{ substances: Substance[]; experiments: Experiment[] }>("/academic/simulator/catalog")
@@ -67,6 +69,12 @@ export default function SimulatorPage() {
         setExperiments(d.experiments);
       })
       .catch((e) => setError(e instanceof ApiError ? e.message : "No se pudo cargar el catálogo."));
+    try {
+      const saved = localStorage.getItem("mc_historial");
+      if (saved) setHistorial(JSON.parse(saved));
+    } catch {
+      /* sin historial */
+    }
   }, []);
 
   const defaultAdds = useCallback(
@@ -98,6 +106,14 @@ export default function SimulatorPage() {
       });
       setResult(res);
       setProdIdx(0);
+      try {
+        const entry = { id: res.id, title: res.title, equation: res.equation_balanced, at: new Date().toISOString() };
+        const next = [entry, ...historial.filter((h) => h.id !== res.id)].slice(0, 40);
+        setHistorial(next);
+        localStorage.setItem("mc_historial", JSON.stringify(next));
+      } catch {
+        /* almacenamiento no disponible */
+      }
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "El simulador no pudo ejecutar la receta.");
     } finally {
@@ -108,6 +124,48 @@ export default function SimulatorPage() {
   function addCustom() {
     if (!customSub || !value || Number(value) <= 0) return;
     setAdds((prev) => [...prev, { substance: customSub, unit, value: Number(value) }]);
+  }
+
+  function descargarReporte() {
+    if (!result) return;
+    const r = result;
+    const prod = Object.entries(r.stoichiometry.products_mol)
+      .map(([f, m]) => `  - ${f}: ${m.toFixed(4)} mol`)
+      .join("\n");
+    const txt = [
+      "==============================================",
+      "  REPORTE DE PRÁCTICA · MOLCORE LAB",
+      "==============================================",
+      `Fecha: ${new Date().toLocaleString()}`,
+      `Experimento: ${r.title}`,
+      "",
+      `Ecuación balanceada: ${r.equation_balanced}`,
+      `Verificación: masa y carga conservadas = ${r.verified.conserves_mass ? "SÍ" : "NO"}`,
+      "",
+      "Estequiometría:",
+      `  Reactivo limitante: ${r.stoichiometry.limiting_reagent}`,
+      `  Grado de avance: ${r.stoichiometry.extent_mol} mol`,
+      "  Productos:",
+      prod,
+      "",
+      r.gas_volume_l != null ? `Volumen de gas (25 °C): ${r.gas_volume_l} L` : "Gas: no aplica",
+      r.temperature_delta_c != null ? `Cambio de temperatura: ${r.temperature_delta_c} °C` : "ΔT: no aplica",
+      r.ph_estimate != null ? `pH estimado: ${r.ph_estimate}` : "pH: no aplica",
+      "",
+      "Explicación:",
+      `  ${r.explanation}`,
+      "",
+      "Seguridad (simulada):",
+      `  ${r.safety}`,
+      "==============================================",
+    ].join("\n");
+    const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `reporte-${r.id || "practica"}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   return (
@@ -254,9 +312,56 @@ export default function SimulatorPage() {
             <p>{result.explanation}</p>
             <h3>Seguridad (simulada)</h3>
             <p className="muted">{result.safety}</p>
+            <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
+              <button className="primary" onClick={descargarReporte} aria-label="Descargar reporte">
+                ⬇ Descargar reporte (.txt)
+              </button>
+            </div>
           </div>
         </div>
       )}
+
+      <div className="card" style={{ marginTop: 16 }}>
+        <h2 style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+          <span>Historial de prácticas</span>
+          <button className="ghost tiny" onClick={() => setShowHist((v) => !v)}>
+            {showHist ? "Ocultar" : `Mostrar (${historial.length})`}
+          </button>
+        </h2>
+        {showHist && (
+          <>
+            {historial.length === 0 ? (
+              <p className="muted">Todavía no has ejecutado ninguna práctica en este navegador.</p>
+            ) : (
+              <table className="table">
+                <tbody>
+                  {historial.map((h) => (
+                    <tr key={h.id}>
+                      <td>{h.title}</td>
+                      <td className="mono small">{h.equation}</td>
+                      <td className="muted small" style={{ whiteSpace: "nowrap" }}>
+                        {new Date(h.at).toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            {historial.length > 0 && (
+              <button
+                className="ghost"
+                style={{ marginTop: 10 }}
+                onClick={() => {
+                  setHistorial([]);
+                  localStorage.removeItem("mc_historial");
+                }}
+              >
+                Borrar historial
+              </button>
+            )}
+          </>
+        )}
+      </div>
     </section>
   );
 }

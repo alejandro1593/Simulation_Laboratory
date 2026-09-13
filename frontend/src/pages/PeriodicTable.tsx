@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CATEGORIAS, ELEMENTS, estado_en } from "../data/elements";
 import type { ElementRow, Categoría } from "../data/elements";
 import ShellDiagram, { poblacionDesdeConfig } from "../components/ShellDiagram";
+import { ISOTOPOS, USOS } from "../data/herramientas";
 
 const CAT_KEYS: Categoría[] = [
   "noble",
@@ -16,7 +17,13 @@ const CAT_KEYS: Categoría[] = [
   "actinido",
 ];
 
-type Modo = "ninguna" | "estado" | "tipo" | "electroneg";
+type Modo = "ninguna" | "estado" | "tipo" | "electroneg" | "densidad";
+
+interface Tip {
+  el: ElementRow;
+  x: number;
+  y: number;
+}
 
 const ES_TIPO: Record<Categoría, string> = {
   noble: "No metal",
@@ -48,6 +55,7 @@ export default function PeriodicTable() {
   const [cat, setCat] = useState<Categoría | null>(null);
   const [modo, setModo] = useState<Modo>("ninguna");
   const [sel, setSel] = useState<ElementRow | null>(null);
+  const [tip, setTip] = useState<Tip | null>(null);
 
   useEffect(() => {
     const onKey = (ev: KeyboardEvent) => {
@@ -80,6 +88,7 @@ export default function PeriodicTable() {
     if (modo === "estado") return false;
     if (modo === "tipo") return false;
     if (modo === "electroneg") return e.e == null;
+    if (modo === "densidad") return e.den == null;
     return false;
   };
 
@@ -101,6 +110,16 @@ export default function PeriodicTable() {
         borderColor: `hsl(${h} 70% 55%)`,
       };
     }
+    if (modo === "densidad" && e.den != null) {
+      const logMin = -4;
+      const logMax = 1.4;
+      const t = Math.max(0, Math.min(1, (Math.log10(Math.max(e.den, 1e-6)) - logMin) / (logMax - logMin)));
+      const h = 240 - t * 240;
+      return {
+        boxShadow: `inset 0 0 20px hsl(${h} 55% 55% / 0.75)`,
+        borderColor: `hsl(${h} 65% 60%)`,
+      };
+    }
     return {};
   };
 
@@ -118,6 +137,11 @@ export default function PeriodicTable() {
       style={{ gridColumn: gc(e), gridRow: gr(e), ...extraStyle, ...estiloModo(e) }}
       title={`${e.nE} (${e.s}) · Z=${e.z}`}
       onClick={() => setSel(e)}
+      onMouseEnter={(ev) => {
+        const r = ev.currentTarget.getBoundingClientRect();
+        setTip({ el: e, x: r.left, y: r.top });
+      }}
+      onMouseLeave={() => setTip(null)}
     >
       <span className="p-num">{e.z}</span>
       <span className="p-sym">{e.s}</span>
@@ -147,6 +171,9 @@ export default function PeriodicTable() {
         </button>
         <button className={modo === "electroneg" ? "chip on" : "chip"} onClick={() => setModo("electroneg")}>
           Electronegatividad
+        </button>
+        <button className={modo === "densidad" ? "chip on" : "chip"} onClick={() => setModo("densidad")}>
+          Densidad
         </button>
       </div>
 
@@ -209,6 +236,24 @@ export default function PeriodicTable() {
       </div>
 
       {sel && <Ficha el={sel} onClose={() => setSel(null)} />}
+
+      {tip && (
+        <div
+          className="p-tip"
+          role="tooltip"
+          style={{ left: tip.x, top: tip.y }}
+        >
+          <div className="p-tip-name">{tip.el.nE} ({tip.el.s})</div>
+          <div className="p-tip-row"><span>Z</span><b>{tip.el.z}</b></div>
+          <div className="p-tip-row"><span>Masa</span><b>{tip.el.m} u</b></div>
+          <div className="p-tip-row"><span>Estado 20 °C</span><b>{estado_en(tip.el.st)}</b></div>
+          <div className="p-tip-row"><span>Electroneg.</span><b>{tip.el.e != null ? tip.el.e.toFixed(2).replace(".", ",") : "—"}</b></div>
+          <div className="p-tip-row"><span>Clasificación</span><b>{CATEGORIAS[tip.el.cat]}</b></div>
+          {modo === "densidad" && tip.el.den != null && (
+            <div className="p-tip-row"><span>Densidad</span><b>{tip.el.den < 0.01 ? `${(tip.el.den * 1000).toFixed(2)} g/L` : `${tip.el.den.toFixed(2)} g/cm³`}</b></div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -217,6 +262,41 @@ function Ficha({ el, onClose }: { el: ElementRow; onClose: () => void }) {
   const shells = poblacionDesdeConfig(el.cfg);
   const fmt = (v: number | null | undefined, suf = "") =>
     v == null ? "—" : `${v.toLocaleString("es")}${suf}`;
+
+  function descargar() {
+    const txt = [
+      "FICHA DE ELEMENTO · MOLCORE LAB",
+      "--------------------------------",
+      `${el.s} — ${el.nE} (${el.nN})`,
+      `Número atómico: ${el.z}`,
+      `Masa: ${el.m} u`,
+      `Clasificación: ${CATEGORIAS[el.cat]}`,
+      `Estado a 20 °C: ${estado_en(el.st)}`,
+      `Configuración: ${el.cfg}`,
+      `Periodo / grupo: ${el.p} / ${el.g ?? "— (f)"}`,
+      `Electronegatividad: ${el.e != null ? el.e.toFixed(2).replace(".", ",") : "—"}`,
+      `Estados de oxidación: ${el.ox}`,
+      `Punto de fusión: ${fmt(el.mp, " °C")}`,
+      `Punto de ebullición: ${fmt(el.bp, " °C")}`,
+      el.den != null
+        ? `Densidad: ${el.den < 0.01 ? fmt(el.den * 1000, " g/L") : fmt(el.den, " g/cm³")}`
+        : "Densidad: —",
+      `Descubrimiento: ${el.dis}`,
+      ISOTOPOS[el.z] ? `Isótopos naturales: ${ISOTOPOS[el.z]}` : "",
+      USOS[el.z] ? `Usos: ${USOS[el.z]}` : "",
+      "--------------------------------",
+    ]
+      .filter(Boolean)
+      .join("\n");
+    const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ficha-${el.s.toLowerCase()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="modal-back" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -278,6 +358,22 @@ function Ficha({ el, onClose }: { el: ElementRow; onClose: () => void }) {
               <dt>Descubrimiento</dt>
               <dd>{el.dis}</dd>
             </dl>
+
+            {ISOTOPOS[el.z] && (
+              <>
+                <h3 style={{ marginTop: 18 }}>Isótopos</h3>
+                <p className="muted small">{ISOTOPOS[el.z]}</p>
+              </>
+            )}
+            {USOS[el.z] && (
+              <>
+                <h3 style={{ marginTop: 18 }}>Usos</h3>
+                <p className="muted small">{USOS[el.z]}</p>
+              </>
+            )}
+            <button className="primary" onClick={descargar} style={{ marginTop: 16 }} aria-label="Descargar ficha">
+              ⬇ Descargar ficha (.txt)
+            </button>
           </div>
           <div>
             <h3>Modelo de capas</h3>

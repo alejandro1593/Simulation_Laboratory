@@ -16,6 +16,7 @@ const groups: NavGroup[] = [
     title: "Laboratorio",
     items: [
       { to: "/simulador", label: "Simulador" },
+      { to: "/laboratorio", label: "Laboratorio libre" },
       { to: "/tutor", label: "Tutor" },
       { to: "/ensayos", label: "Ensayos" },
       { to: "/toxicologia", label: "Toxicología" },
@@ -36,6 +37,12 @@ const groups: NavGroup[] = [
   {
     title: "Herramientas",
     items: [
+      { to: "/soluciones", label: "Soluciones" },
+      { to: "/valoracion", label: "Valoración" },
+      { to: "/termoquimica", label: "Termoquímica" },
+      { to: "/vsepr", label: "Geometría (VSEPR)" },
+      { to: "/isomeria", label: "Isomería" },
+      { to: "/retos", label: "Retos" },
       { to: "/constructor", label: "Constructor" },
       { to: "/calculadora", label: "Calculadora" },
     ],
