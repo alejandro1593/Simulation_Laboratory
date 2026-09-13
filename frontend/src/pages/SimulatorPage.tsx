@@ -58,6 +58,7 @@ export default function SimulatorPage() {
   const [customSub, setCustomSub] = useState("");
   const [unit, setUnit] = useState<AddItem["unit"]>("mL");
   const [value, setValue] = useState("30");
+  const [prodIdx, setProdIdx] = useState(0);
 
   useEffect(() => {
     api<{ substances: Substance[]; experiments: Experiment[] }>("/academic/simulator/catalog")
@@ -96,6 +97,7 @@ export default function SimulatorPage() {
         authed: true,
       });
       setResult(res);
+      setProdIdx(0);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "El simulador no pudo ejecutar la receta.");
     } finally {
@@ -119,18 +121,13 @@ export default function SimulatorPage() {
       <div className="grid-2">
         <div className="card">
           <h2>Catálogo</h2>
-          <ul className="exp-list">
+          <select value={selected} onChange={(e) => pickExp(Number(e.target.value))} aria-label="Experimento del catálogo" style={{ width: "100%", padding: "8px 10px" }}>
             {experiments.map((e, i) => (
-              <li key={e.id}>
-                <button className={i === selected ? "exp-item active" : "exp-item"} onClick={() => pickExp(i)}>
-                  <strong>{e.titleEs}</strong>
-                  <span className="muted">
-                    {e.topic} · {e.equation_display}
-                  </span>
-                </button>
-              </li>
+              <option key={e.id} value={i}>
+                {e.titleEs} · {e.topic} · {e.equation_display}
+              </option>
             ))}
-          </ul>
+          </select>
         </div>
 
         <div className="card">
@@ -216,13 +213,40 @@ export default function SimulatorPage() {
               </tbody>
             </table>
             <h3>Productos</h3>
-            <ul>
-              {Object.entries(result.stoichiometry.products_mol).map(([f, m]) => (
-                <li key={f}>
-                  {f}: {m} mol
-                </li>
-              ))}
-            </ul>
+            {(() => {
+              const entries = Object.entries(result.stoichiometry.products_mol);
+              const total = entries.reduce((s, [, m]) => s + m, 0);
+              const safe = Math.min(Math.max(prodIdx, 0), entries.length - 1);
+              const [formula, moles] = entries[safe] ?? ["—", 0];
+              const pct = total > 0 ? (moles / total) * 100 : 0;
+              return (
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <select value={safe} onChange={(e) => setProdIdx(Number(e.target.value))} aria-label="Producto formado">
+                    {entries.map(([f, m], i) => (
+                      <option key={f} value={i}>
+                        {f} · {m} mol
+                      </option>
+                    ))}
+                  </select>
+                  {entries.length > 0 && (
+                    <div className="panel" style={{ padding: "10px 12px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+                        <span className="muted small">Producto</span>
+                        <span className="mono small">{formula}</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+                        <span className="muted small">Cantidad</span>
+                        <span className="mono small">{moles.toFixed(4)} mol</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+                        <span className="muted small">Fracción molar</span>
+                        <span className="mono small">{pct.toFixed(1)} %</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
           <SimBench scene={result.scene} key={result.id} />
           <div className="span-2">

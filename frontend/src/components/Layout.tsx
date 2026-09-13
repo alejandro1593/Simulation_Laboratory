@@ -1,16 +1,49 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 
-const nav = [
-  { to: "/simulador", label: "Simulador" },
-  { to: "/tabla", label: "Tabla periódica" },
-  { to: "/constructor", label: "Constructor" },
-  { to: "/tutor", label: "Tutor de balanceo" },
+interface NavItem {
+  to: string;
+  label: string;
+}
+
+interface NavGroup {
+  title: string;
+  items: NavItem[];
+}
+
+const groups: NavGroup[] = [
+  {
+    title: "Laboratorio",
+    items: [
+      { to: "/simulador", label: "Simulador" },
+      { to: "/tutor", label: "Tutor" },
+      { to: "/ensayos", label: "Ensayos" },
+      { to: "/toxicologia", label: "Toxicología" },
+    ],
+  },
+  {
+    title: "Tabla",
+    items: [{ to: "/tabla", label: "Periódica" }],
+  },
+  {
+    title: "Catálogos",
+    items: [
+      { to: "/catalogo/inorganico", label: "Inorgánico" },
+      { to: "/catalogo/organico", label: "Orgánico" },
+      { to: "/catalogo/organico/aprender", label: "Orgánico · Nomenclatura" },
+    ],
+  },
+  {
+    title: "Herramientas",
+    items: [
+      { to: "/constructor", label: "Constructor" },
+      { to: "/calculadora", label: "Calculadora" },
+    ],
+  },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
   return (
     <div className="app">
       <header className="topbar">
@@ -18,25 +51,42 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <span className="brand-mark">⬢</span> MolCore Lab
         </Link>
         <nav className="nav">
-          {nav.map((n) => (
-            <NavLink key={n.to} to={n.to} className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}>
-              {n.label}
-            </NavLink>
+          {groups.map((g, gi) => (
+            <div key={g.title} className="nav-group" style={{ display: "flex", gap: "3px", alignItems: "center" }}>
+              {gi > 0 && (
+                <span style={{ color: "var(--faint)", margin: "0 6px", fontSize: 13 }}>·</span>
+              )}
+              <span
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: 10.5,
+                  letterSpacing: 1,
+                  textTransform: "uppercase",
+                  color: "var(--faint)",
+                  marginRight: 5,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {g.title}
+              </span>
+              {g.items.map((n) => (
+                <NavLink
+                  key={n.to}
+                  to={n.to}
+                  className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
+                >
+                  {n.label}
+                </NavLink>
+              ))}
+            </div>
           ))}
         </nav>
         <div className="account">
           {user ? (
             <>
-              <span className="muted">
-                {user.username} · zona {user.zone}
-              </span>
-              <button
-                className="ghost"
-                onClick={() => {
-                  logout();
-                  navigate("/");
-                }}
-              >
+              <span className="zone-tag">{user.zone}</span>
+              <span className="muted small">{user.username}</span>
+              <button className="tiny" onClick={logout} title="Cerrar sesión">
                 Salir
               </button>
             </>
@@ -54,7 +104,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </header>
       <main className="main">{children}</main>
       <footer className="footer muted">
-        MolCore Lab · MVP Fase 1 · La química se resuelve en el backend con un kernel determinista y datos curados.
+        MolCore Lab · Química resuelta con determinismo: kernel de balanceo, datos curados y verificación por API.
       </footer>
     </div>
   );

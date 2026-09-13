@@ -69,3 +69,107 @@ def dilution(*, c1: float, v1_ml: float, c2_target: float) -> dict:
         "v2_ml": round(v2, 2),
         "water_to_add_ml": round(v2 - v1_ml, 2),
     }
+
+
+# Estados de oxidación (reglas deterministas simplificadas).
+# Orden de prioridad:
+#  1. F = −1 ; metales de los grupos 1/2 y Zn, Al, B = fijos
+#  2. H = +1 (hydruros con metales → −1)
+#  3. Halógenos = −1 salvo si hay oxígeno (entonces se resuelven)
+#  4. O = −2 salvo peróxidos (O₂²⁻, detectados por balance) o flúor
+#  5. Si queda un único elemento sin asignar, se despeja por carga total.
+
+_ALCALINOS = {"Li", "Na", "K", "Rb", "Cs", "Fr"}
+_ALCALINOTERREOS = {"Be", "Mg", "Ca", "Sr", "Ba", "Ra"}
+_METALES = _ALCALINOS | _ALCALINOTERREOS | {
+    "Al", "Zn", "Fe", "Cu", "Ag", "Pb", "Sn", "Hg", "Ni", "Co", "Mn",
+    "Cr", "Ti", "V", "Mo", "W", "Cd", "Pt", "Au",
+}
+
+
+def _assign_states(comp, charge) -> tuple[dict[str, int | None], list[str]]:
+    """Devuelve (estado por símbolo, notas)."""
+    fixed: dict[str, int | None] = {}
+    notes: list[str] = []
+    unfixed = set(comp)
+
+    for el in unfixed.copy():
+        if el == "F":
+            fixed[el] = -1
+        elif el in _ALCALINOS:
+            fixed[el] = 1
+        elif el in _ALCALINOTERREOS:
+            fixed[el] = 2
+        elif el == "Zn":
+            fixed[el] = 2
+        elif el == "Al":
+            fixed[el] = 3
+
+    # Hydruros: si todos los no-H son metales → H = −1 (p.ej. NaH, CaH₂)
+    others = {el for el in comp if el != "H"}
+    if "H" in comp and others and others <= _METALES:
+        fixed["H"] = -1
+    elif "H" in comp:
+        fixed["H"] = 1
+
+    halogens = {"Cl", "Br", "I"}
+    for el in halogens & unfixed:
+        if "O" in comp:
+            continue  # se resuelve más abajo (Cl₂O₇, HClO₄…)
+        fixed[el] = -1
+
+    # Peróxidos: 2 elementos, el otro con estado fijo, el O₂ guarda −1
+    o_in = "O" in unfixed and "O" not in fixed
+    if o_in:
+        others = set(comp) - {"O"}
+        if len(others) == 1:
+            other = next(iter(others))
+            if comp["O"] == 2 and other in fixed and comp[other] * fixed[other] - 2 == charge:
+                fixed["O"] = -1
+                notes.append("Peróxido: el oxígeno actúa con estado −1 (grupo O₂²⁻).")
+
+    if "O" in unfixed and "O" not in fixed and "F" not in comp:
+        fixed["O"] = -2
+
+    # Despejar el elemento que queda
+    remaining = unfixed - set(fixed)
+    if len(remaining) == 1:
+        el = remaining.pop()
+        already = sum(n * fixed[s] for s, n in comp.items() if s in fixed)
+        total_slots = (charge - already) / comp[el]
+        est = round(total_slots)
+        if abs(total_slots - est) > 0.01:
+            notes.append(
+                f"No hay un estado de oxidación único para {el}: "
+                f"el balance exige {total_slots:+.2f}. Revisa carga o fórmula."
+            )
+            fixed[el] = None  # type: ignore[assignment]
+        else:
+            fixed[el] = est
+    elif len(remaining) > 1:
+        notes.append(
+            "No se puede asignar estado único: varios elementos sin regla fija "
+            f"({', '.join(sorted(remaining))}). Enseña el ion o la carga."
+        )
+
+    return fixed, notes
+
+
+def oxidation_states(formula: str) -> dict:
+    """Asigna estado de oxidación a cada elemento con reglas deterministas."""
+    try:
+        spec = parse_species(formula)
+    except ParseError as exc:
+        raise CalculationError(str(exc)) from exc
+    assigned, notes = _assign_states(spec.composition, spec.charge)
+    has_unknown = any(v is None for v in assigned.values())
+    total = sum(n * (assigned.get(el) or 0) for el, n in spec.composition.items()) if not has_unknown else 0.0
+    states = {el: None for el in spec.composition} if has_unknown else assigned
+    return {
+        "formula": spec.formula,
+        "charge": spec.charge,
+        "states": states,
+        "total": round(total, 2),
+        "balanced": round(total, 2) == spec.charge,
+        "notes": notes,
+    }

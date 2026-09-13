@@ -1,96 +1,295 @@
-import { useEffect, useState } from "react";
-import { api, ApiError } from "../api/client";
+import { useEffect, useMemo, useState } from "react";
+import { CATEGORIAS, ELEMENTS, estado_en } from "../data/elements";
+import type { ElementRow, Categoría } from "../data/elements";
+import ShellDiagram, { poblacionDesdeConfig } from "../components/ShellDiagram";
 
-interface ElementData {
-  z: number;
-  s: string;
-  nE?: string;
-  nN?: number;
-  p: number;
-  g: number | null;
-  b: string;
-  m?: number;
-  e?: number;
-  st?: string;
-  family: string;
-  color: string;
+const CAT_KEYS: Categoría[] = [
+  "noble",
+  "alcalino",
+  "alcalinoterreo",
+  "transicion",
+  "postransicion",
+  "metaloide",
+  "nometal",
+  "halogeno",
+  "lantanido",
+  "actinido",
+];
+
+type Modo = "ninguna" | "estado" | "tipo" | "electroneg";
+
+const ES_TIPO: Record<Categoría, string> = {
+  noble: "No metal",
+  alcalino: "Metal",
+  alcalinoterreo: "Metal",
+  transicion: "Metal",
+  postransicion: "Metal",
+  metaloide: "Semimetal",
+  nometal: "No metal",
+  halogeno: "No metal",
+  lantanido: "Metal",
+  actinido: "Metal",
+};
+
+function esMetal(cat: Categoría) {
+  return ES_TIPO[cat] === "Metal";
+}
+function esNoMetal(cat: Categoría) {
+  return ES_TIPO[cat] === "No metal";
+}
+
+function tableCol(e: ElementRow): number {
+  if (e.g != null) return e.g;
+  return 3 + (e.z - (e.p === 6 ? 57 : 89));
 }
 
 export default function PeriodicTable() {
-  const [elements, setElements] = useState<ElementData[]>([]);
-  const [sel, setSel] = useState<ElementData | null>(null);
-  const [error, setError] = useState("");
+  const [q, setQ] = useState("");
+  const [cat, setCat] = useState<Categoría | null>(null);
+  const [modo, setModo] = useState<Modo>("ninguna");
+  const [sel, setSel] = useState<ElementRow | null>(null);
 
   useEffect(() => {
-    api<ElementData[]>("/academic/periodic/elements")
-      .then(setElements)
-      .catch((e) => setError(e instanceof ApiError ? e.message : "No se pudo cargar la tabla."));
+    const onKey = (ev: KeyboardEvent) => {
+      if (ev.key === "Escape") setSel(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  function cellStyle(el: ElementData) {
-    const pos = (el.p - 1) * 18 + el.z - (el.p >= 6 ? 32 : 0);
-    return { gridColumn: pos + 1, backgroundColor: el.color };
-  }
+  const checked = useMemo(() => {
+    const gq = q.trim().toLowerCase();
+    return (e: ElementRow) => {
+      if (!gq) return true;
+      return (
+        e.s.toLowerCase() === gq ||
+        e.nE.toLowerCase().includes(gq) ||
+        e.nN.toLowerCase().includes(gq) ||
+        String(e.z) === gq
+      );
+    };
+  }, [q]);
+
+  const oculto = (e: ElementRow) => {
+    if (cat && e.cat !== cat) return true;
+    return !checked(e);
+  };
+
+  const dim = (e: ElementRow) => {
+    if (oculto(e)) return true;
+    if (modo === "estado") return false;
+    if (modo === "tipo") return false;
+    if (modo === "electroneg") return e.e == null;
+    return false;
+  };
+
+  const estiloModo = (e: ElementRow): React.CSSProperties => {
+    if (oculto(e)) return {};
+    if (modo === "estado") {
+      const map: Record<string, string> = { S: "#5ce8c0", L: "#7aa2ff", G: "#f2b263" };
+      return { boxShadow: `inset 0 0 0 2px ${map[e.st] ?? "transparent"}` };
+    }
+    if (modo === "tipo") {
+      const c = esNoMetal(e.cat) ? "#f2b263" : esMetal(e.cat) ? "#5ce8c0" : "#b08ce8";
+      return { boxShadow: `inset 0 0 0 2px ${c}` };
+    }
+    if (modo === "electroneg" && e.e != null) {
+      const t = (e.e - 0.7) / (3.98 - 0.7);
+      const h = 160 - t * 140;
+      return {
+        boxShadow: `inset 0 0 22px ${`hsl(${h} 60% 52% / 0.8)`}`,
+        borderColor: `hsl(${h} 70% 55%)`,
+      };
+    }
+    return {};
+  };
+
+  const gc = (e: ElementRow) => tableCol(e) + 1;
+  const gr = (e: ElementRow) => {
+    if (e.g != null) return e.p + 1;
+    return e.p === 6 ? 10 : 11;
+  };
+  const sep = (col: number) => [4, 14].includes(col) ? " sep" : "";
+
+  const cell = (e: ElementRow, extraStyle?: React.CSSProperties) => (
+    <button
+      key={e.s}
+      className={`p-cell c-${e.cat} ${dim(e) ? "dim" : ""}${sep(gc(e))}`}
+      style={{ gridColumn: gc(e), gridRow: gr(e), ...extraStyle, ...estiloModo(e) }}
+      title={`${e.nE} (${e.s}) · Z=${e.z}`}
+      onClick={() => setSel(e)}
+    >
+      <span className="p-num">{e.z}</span>
+      <span className="p-sym">{e.s}</span>
+    </button>
+  );
 
   return (
-    <section className="page">
-      <h1>Tabla periódica — 118 elementos</h1>
-      {error && <p className="error">{error}</p>}
-      <div className="periodic" style={{ gridTemplateColumns: `repeat(18, minmax(0, 1fr))` }}>
-        {elements.map((el) => (
+    <div className="page">
+      <h1>Tabla periódica</h1>
+      <p className="lead">Los 118 elementos confirmados, ordenados por número atómico. Haz clic en cualquier casilla para abrir su ficha.</p>
+
+      <div className="filters">
+        <input
+          className="search"
+          placeholder="Buscar (H, Hierro, iron, 26)…"
+          value={q}
+          onChange={(ev) => setQ(ev.target.value)}
+        />
+        <button className={modo === "ninguna" ? "chip on" : "chip"} onClick={() => setModo("ninguna")}>
+          Normal
+        </button>
+        <button className={modo === "estado" ? "chip on" : "chip"} onClick={() => setModo("estado")}>
+          Estado a 20 °C
+        </button>
+        <button className={modo === "tipo" ? "chip on" : "chip"} onClick={() => setModo("tipo")}>
+          Metal / no metal
+        </button>
+        <button className={modo === "electroneg" ? "chip on" : "chip"} onClick={() => setModo("electroneg")}>
+          Electronegatividad
+        </button>
+      </div>
+
+      <div className="filters">
+        {CAT_KEYS.map((k) => (
           <button
-            key={el.z}
-            className="p-cell"
-            style={cellStyle(el)}
-            onClick={() => setSel(el)}
-            title={`${el.s} · ${el.family}`}
+            key={k}
+            className={cat === k ? "chip on" : "chip"}
+            onClick={() => setCat(cat === k ? null : k)}
           >
-            <span className="p-num">{el.z}</span>
-            <span className="p-sym">{el.s}</span>
+            {CATEGORIAS[k]}
           </button>
         ))}
+        {cat && (
+          <button className="tiny" onClick={() => setCat(null)}>
+            Limpiar filtros
+          </button>
+        )}
       </div>
-      {sel && (
-        <div className="card element-card">
-          <h2>
-            {sel.s} <span className="muted">(Z = {sel.z})</span>
-          </h2>
-          <table className="table">
-            <tbody>
-              <tr>
-                <td>Nombre</td>
-                <td>{sel.nE}</td>
-              </tr>
-              <tr>
-                <td>Familia</td>
-                <td>{sel.family}</td>
-              </tr>
-              <tr>
-                <td>Periodo / grupo</td>
-                <td>
-                  {sel.p} / {sel.g ?? "—"}
-                </td>
-              </tr>
-              <tr>
-                <td>Masa atómica</td>
-                <td>{sel.m ?? "—"} u</td>
-              </tr>
-              <tr>
-                <td>Electronegatividad</td>
-                <td>{sel.e ?? "—"}</td>
-              </tr>
-              <tr>
-                <td>Configuración electrónica</td>
-                <td>{sel.nN ?? "—"}</td>
-              </tr>
-              <tr>
-                <td>Estado (25 °C)</td>
-                <td>{sel.st ?? "—"}</td>
-              </tr>
-            </tbody>
-          </table>
+
+      <div className="periodic-wrap panel">
+        <div className="periodic">
+          <div className="p-corner" style={{ gridColumn: 1, gridRow: 1 }}>P</div>
+          {Array.from({ length: 7 }, (_, i) => (
+            <div key={`per${i + 1}`} className="p-period" style={{ gridColumn: 1, gridRow: i + 2 }}>
+              {i + 1}
+            </div>
+          ))}
+          {Array.from({ length: 18 }, (_, i) => {
+            const g = i + 1;
+            const col = g + 1;
+            return (
+              <div key={`h${g}`} className={`p-hdr${[4, 14].includes(col) ? " sep" : ""}`} style={{ gridColumn: col, gridRow: 1 }}>
+                {g}
+              </div>
+            );
+          })}
+          <div className="p-period" style={{ gridColumn: 1, gridRow: 10 }}>
+            Ln
+          </div>
+          <div className="p-period" style={{ gridColumn: 1, gridRow: 11 }}>
+            An
+          </div>
+          <div className="p-ln-sep" style={{ gridColumn: "1 / -1", gridRow: 9 }}></div>
+          {ELEMENTS.map((e) => cell(e))}
         </div>
-      )}
-    </section>
+
+        <div className="legend">
+          {(Object.keys(CATEGORIAS) as Categoría[]).map((k) => (
+            <span key={k}>
+              <i className={`c-${k}`} /> {CATEGORIAS[k]}
+            </span>
+          ))}
+        </div>
+
+        <p className="captions" style={{ marginTop: 12 }}>
+          Forma clásica: los 118 elementos, los lantánidos (57–71) y actínidos (89–103) aparecen en
+          filas separadas bajo el bloque principal. Grupo = columna; período = fila.
+        </p>
+      </div>
+
+      {sel && <Ficha el={sel} onClose={() => setSel(null)} />}
+    </div>
+  );
+}
+
+function Ficha({ el, onClose }: { el: ElementRow; onClose: () => void }) {
+  const shells = poblacionDesdeConfig(el.cfg);
+  const fmt = (v: number | null | undefined, suf = "") =>
+    v == null ? "—" : `${v.toLocaleString("es")}${suf}`;
+  return (
+    <div className="modal-back" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="el-head">
+          <div className={`el-symbol-box c-${el.cat}`}>
+            <span className={`p-sym c-${el.cat}-txt`} style={{ fontSize: 34 }}>
+              {el.s}
+            </span>
+          </div>
+          <div className="el-title">
+            <h2>{el.nE}</h2>
+            <div className="el-sub">
+              {el.nN} · Z = {el.z} · {CATEGORIAS[el.cat]}
+            </div>
+            <div className="row" style={{ marginTop: 6 }}>
+              <span className="zone-tag">M ≈ {fmt(el.m)} u</span>
+              <span className="zone-tag" style={{ borderColor: "rgba(122,162,255,0.35)", color: "var(--accent-2)" }}>
+                {estado_en(el.st)} a 20 °C
+              </span>
+            </div>
+          </div>
+          <button className="icon-btn" onClick={onClose} title="Cerrar" aria-label="Cerrar">
+            ✕
+          </button>
+        </div>
+
+        <div className="el-grid">
+          <div>
+            <h3>Propiedades</h3>
+            <dl className="data-kv" style={{ marginTop: 8 }}>
+              <dt>Config. electrónica</dt>
+              <dd className="mono">{el.cfg}</dd>
+              <dt>Periodo / grupo</dt>
+              <dd className="mono">
+                {el.p} / {el.g ?? "— (f)"}
+              </dd>
+              <dt>Bloque</dt>
+              <dd className="mono">{el.b}</dd>
+              <dt>Electronegatividad</dt>
+              <dd className="mono">{el.e != null ? el.e.toFixed(2).replace(".", ",") : "—"}</dd>
+              <dt>Estados de oxidación</dt>
+              <dd title="Estados de oxidación más habituales">
+                <span className="ox-tags" style={{ textTransform: "none" }}>
+                  {el.ox.split(",").map((o) => (
+                    <span key={o} className="ox-tag">
+                      {o.trim()}
+                    </span>
+                  ))}
+                </span>
+              </dd>
+              <dt>Pto. fusión</dt>
+              <dd className="mono">{fmt(el.mp, " °C")}</dd>
+              <dt>Pto. ebullición</dt>
+              <dd className="mono">{fmt(el.bp, " °C")}</dd>
+              <dt>Densidad</dt>
+              <dd className="mono">
+                {el.den != null ? (el.den < 0.01 ? fmt(el.den * 1000, " g/L") : fmt(el.den, " g/cm³")) : "—"}
+              </dd>
+              <dt>Descubrimiento</dt>
+              <dd>{el.dis}</dd>
+            </dl>
+          </div>
+          <div>
+            <h3>Modelo de capas</h3>
+            <div className="shells">
+              <ShellDiagram shells={shells} />
+            </div>
+            <p className="captions" style={{ textAlign: "center", marginTop: 2 }}>
+              {shells.length} capas · {shells.join(" – ")}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -248,6 +248,131 @@
       ],
       "strong": null,
       "color": "#e3f2fd"
+    },
+    {
+      "key": "o2",
+      "nameEs": "Dioxígeno (gas)",
+      "formula": "O2",
+      "state": "G",
+      "molar_mass": 31.998,
+      "strong": null,
+      "color": "#9bd0ff"
+    },
+    {
+      "key": "ch4",
+      "nameEs": "Metano (gas)",
+      "formula": "CH4",
+      "state": "G",
+      "molar_mass": 16.043,
+      "strong": null,
+      "color": "#c8e6c9"
+    },
+    {
+      "key": "c3h8",
+      "nameEs": "Propano (gas)",
+      "formula": "C3H8",
+      "state": "G",
+      "molar_mass": 44.097,
+      "strong": null,
+      "color": "#e8d5c4"
+    },
+    {
+      "key": "c2h5oh",
+      "nameEs": "Etanol (alcohol etílico)",
+      "formula": "C2H5OH",
+      "state": "L",
+      "molar_mass": 46.069,
+      "density": 0.789,
+      "strong": null,
+      "color": "#fff8e1"
+    },
+    {
+      "key": "mg",
+      "nameEs": "Magnesio (cinta)",
+      "formula": "Mg",
+      "state": "S",
+      "molar_mass": 24.305,
+      "strong": null,
+      "color": "#d9d9d9"
+    },
+    {
+      "key": "al",
+      "nameEs": "Aluminio (lámina)",
+      "formula": "Al",
+      "state": "S",
+      "molar_mass": 26.982,
+      "strong": null,
+      "color": "#c0c7cf"
+    },
+    {
+      "key": "mgcl2",
+      "nameEs": "Cloruro de magnesio (solución)",
+      "formula": "MgCl2",
+      "state": "L",
+      "molar_mass": 95.211,
+      "concentrations": [
+        0.1,
+        0.5,
+        1
+      ],
+      "strong": null,
+      "color": "#f5f5f5"
+    },
+    {
+      "key": "cacl2",
+      "nameEs": "Cloruro de calcio (solución)",
+      "formula": "CaCl2",
+      "state": "L",
+      "molar_mass": 110.98,
+      "concentrations": [
+        0.1,
+        0.5,
+        1
+      ],
+      "strong": null,
+      "color": "#f5f5f5"
+    },
+    {
+      "key": "feso4",
+      "nameEs": "Sulfato de hierro (II)",
+      "formula": "FeSO4",
+      "state": "L",
+      "molar_mass": 151.908,
+      "concentrations": [
+        0.1,
+        0.5,
+        1
+      ],
+      "strong": null,
+      "color": "#b7e0c0"
+    },
+    {
+      "key": "fecl3",
+      "nameEs": "Cloruro de hierro (III)",
+      "formula": "FeCl3",
+      "state": "L",
+      "molar_mass": 162.204,
+      "concentrations": [
+        0.1,
+        0.5,
+        1
+      ],
+      "strong": null,
+      "color": "#e3c35f"
+    },
+    {
+      "key": "hno3",
+      "nameEs": "Ácido nítrico (solución)",
+      "formula": "HNO3",
+      "state": "L",
+      "molar_mass": 63.012,
+      "concentrations": [
+        1,
+        3,
+        6
+      ],
+      "strong": "acid",
+      "color": "#f5f0e1"
     }
   ],
   "experiments": [
@@ -811,6 +936,383 @@
       "safety": "Nunca oler directamente los vapores; en el simulador es seguro.",
       "dH_reference_kj_per_mol": null,
       "gas": null
+    },
+    {
+      "id": "exp-gases-mg-hcl",
+      "titleEs": "Magnesio + ácido clorhídrico (desprendimiento de H2)",
+      "level": "bachillerato",
+      "topic": "redox",
+      "reactants": [
+        "mg",
+        "hcl"
+      ],
+      "equation": "Mg + 2 HCl -> MgCl2 + H2",
+      "effects": [
+        {
+          "type": "gas",
+          "species": "H2",
+          "note": "Efervescencia viva de hidrógeno."
+        },
+        {
+          "type": "exothermic",
+          "note": "La reacción es notablemente exotérmica."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solid",
+          "substance": "mg",
+          "mass_g": 0.5
+        },
+        {
+          "action": "add_solution",
+          "substance": "hcl",
+          "volume_ml": 40,
+          "note": "El magnesio reacciona con efervescencia inmediata."
+        }
+      ],
+      "explanation": "El magnesio se oxida (0 → +2) y el H+ se reduce a H2. Es un metal activo de la serie de actividad, por eso reacciona rápido con ácidos diluidos.",
+      "safety": "El hidrógeno es inflamable: en laboratorio real, lejos de llamas y fuentes de ignición.",
+      "dH_reference_kj_per_mol": null,
+      "gas": "H2"
+    },
+    {
+      "id": "exp-gases-al-hcl",
+      "titleEs": "Aluminio + ácido clorhídrico (H2)",
+      "level": "bachillerato",
+      "topic": "redox",
+      "reactants": [
+        "al",
+        "hcl"
+      ],
+      "equation": "2 Al + 6 HCl -> 2 AlCl3 + 3 H2",
+      "effects": [
+        {
+          "type": "gas",
+          "species": "H2",
+          "note": "Burbujeo sostenido de hidrógeno."
+        },
+        {
+          "type": "exothermic"
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solid",
+          "substance": "al",
+          "mass_g": 0.5
+        },
+        {
+          "action": "add_solution",
+          "substance": "hcl",
+          "volume_ml": 40
+        }
+      ],
+      "explanation": "Cada 2 moles de Al se consumen 6 moles de HCl y se generan 3 moles de H2: la estequiometría del balanceo se ve en el matraz de gas.",
+      "safety": "En simulador es seguro; el hidrógeno generado sobre el aluminio recién atacado es inflamable en la realidad.",
+      "dH_reference_kj_per_mol": null,
+      "gas": "H2"
+    },
+    {
+      "id": "exp-combustion-ch4",
+      "titleEs": "Combustión del metano: CH4 + O2",
+      "level": "universidad",
+      "topic": "combustion",
+      "reactants": [
+        "ch4",
+        "o2"
+      ],
+      "equation": "CH4 + 2 O2 -> CO2 + 2 H2O",
+      "effects": [
+        {
+          "type": "exothermic",
+          "note": "Combustión muy exotérmica (dT estimado alto)."
+        },
+        {
+          "type": "gas",
+          "species": "CO2",
+          "note": "Se produce CO2 (g) y vapor de agua."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_gas",
+          "substance": "ch4",
+          "volume_ml": 50
+        },
+        {
+          "action": "add_gas",
+          "substance": "o2",
+          "volume_ml": 100,
+          "note": "Dos volúmenes de oxígeno por cada uno de metano (relación estequiométrica)."
+        }
+      ],
+      "explanation": "Un alcano reacciona con el dioxígeno dando CO2 y H2O. Aquí se simula la estequiometría; en la realidad requiere ignición: el metano es el componente principal del gas natural.",
+      "safety": "Simulación conceptual de llama: el metano es extremadamente inflamable y forma mezclas explosivas con el aire en la realidad.",
+      "dH_reference_kj_per_mol": -890.0,
+      "gas": "CO2"
+    },
+    {
+      "id": "exp-combustion-c3h8",
+      "titleEs": "Combustión del propano: C3H8 + O2",
+      "level": "universidad",
+      "topic": "combustion",
+      "reactants": [
+        "c3h8",
+        "o2"
+      ],
+      "equation": "C3H8 + 5 O2 -> 3 CO2 + 4 H2O",
+      "effects": [
+        {
+          "type": "exothermic",
+          "note": "Reacción muy exotérmica (gas de las bombonas de cocina)."
+        },
+        {
+          "type": "gas",
+          "species": "CO2"
+        }
+      ],
+      "script": [
+        {
+          "action": "add_gas",
+          "substance": "c3h8",
+          "volume_ml": 20
+        },
+        {
+          "action": "add_gas",
+          "substance": "o2",
+          "volume_ml": 100,
+          "note": "Cinco volúmenes de O2 por volumen de propano."
+        }
+      ],
+      "explanation": "El propano (alcano de 3 carbonos) se oxida totalmente: 1 mol consume 5 de O2 y libera 3 de CO2 y 4 de H2O. Así funciona el gas envasado de uso doméstico.",
+      "safety": "Simulado sin llama real. En la realidad el propano es inflamable y despide un olor añadido característico por seguridad.",
+      "dH_reference_kj_per_mol": -2219.0,
+      "gas": "CO2"
+    },
+    {
+      "id": "exp-combustion-etanol",
+      "titleEs": "Combustión del etanol: C2H5OH + O2",
+      "level": "universidad",
+      "topic": "combustion",
+      "reactants": [
+        "c2h5oh",
+        "o2"
+      ],
+      "equation": "C2H5OH + 3 O2 -> 2 CO2 + 3 H2O",
+      "effects": [
+        {
+          "type": "exothermic",
+          "note": "Llama azul característica de los alcoholes (simulada)."
+        },
+        {
+          "type": "gas",
+          "species": "CO2"
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "c2h5oh",
+          "volume_ml": 30
+        },
+        {
+          "action": "add_gas",
+          "substance": "o2",
+          "volume_ml": 90
+        }
+      ],
+      "explanation": "El etanol (alcohol con grupo -OH) arde dando CO2 y H2O. Es la reacción que aprovechan los bioetanol y las lámparas de alcohol.",
+      "safety": "Simulación de llama. El etanol es inflamable; el vapor puede arder lejos de la fuente encendida.",
+      "dH_reference_kj_per_mol": -1367.0,
+      "gas": "CO2"
+    },
+    {
+      "id": "exp-precipitacion-mgcl2-naoh",
+      "titleEs": "Hidróxido de magnesio: MgCl2 + NaOH",
+      "level": "bachillerato",
+      "topic": "precipitation",
+      "reactants": [
+        "mgcl2",
+        "naoh"
+      ],
+      "equation": "MgCl2 + 2 NaOH -> Mg(OH)2 + 2 NaCl",
+      "effects": [
+        {
+          "type": "precipitate",
+          "colorHex": "#f4f6f5",
+          "note": "Sólido blanco gelatinoso de Mg(OH)2."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "mgcl2",
+          "volume_ml": 25
+        },
+        {
+          "action": "add_solution",
+          "substance": "naoh",
+          "volume_ml": 50,
+          "note": "Dos moles de NaOH por cada uno de MgCl2."
+        }
+      ],
+      "explanation": "El Mg(OH)2 es poco soluble y precipita en blanco. Es el compuesto activo de la 'leche de magnesia' (laxante suave y antiácido).",
+      "safety": "Simulado. El NaOH concentrado es corrosivo en la realidad.",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-precipitacion-feso4-naoh",
+      "titleEs": "Hidróxido de hierro (II): FeSO4 + NaOH",
+      "level": "bachillerato",
+      "topic": "precipitation",
+      "reactants": [
+        "feso4",
+        "naoh"
+      ],
+      "equation": "FeSO4 + 2 NaOH -> Fe(OH)2 + Na2SO4",
+      "effects": [
+        {
+          "type": "precipitate",
+          "colorHex": "#a9c9b0",
+          "note": "Precipitado verdoso de Fe(OH)2 que se oscurece al oxidarse."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "feso4",
+          "volume_ml": 25
+        },
+        {
+          "action": "add_solution",
+          "substance": "naoh",
+          "volume_ml": 25
+        }
+      ],
+      "explanation": "El ion Fe2+ forma un hidróxido verde pálido. En contacto con el aire el Fe2+ se oxida a Fe3+, de ahí que el color tienda a pardo.",
+      "safety": "Simulado. Las sales de hierro son manchantes (herrumbres).",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-precipitacion-fecl3-naoh",
+      "titleEs": "Hidróxido de hierro (III): FeCl3 + NaOH",
+      "level": "bachillerato",
+      "topic": "precipitation",
+      "reactants": [
+        "fecl3",
+        "naoh"
+      ],
+      "equation": "FeCl3 + 3 NaOH -> Fe(OH)3 + 3 NaCl",
+      "effects": [
+        {
+          "type": "precipitate",
+          "colorHex": "#b0713f",
+          "note": "Precipitado pardo-rojizo de Fe(OH)3 (color de la herrumbre)."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "fecl3",
+          "volume_ml": 20
+        },
+        {
+          "action": "add_solution",
+          "substance": "naoh",
+          "volume_ml": 60,
+          "note": "Tres moles de NaOH por cada uno de FeCl3."
+        }
+      ],
+      "explanation": "El ion Fe3+ precipita como Fe(OH)3 pardo, el clásico tono de la oxidación del hierro. Es un ejemplo perfecto de triple hidróxido estequiométrico.",
+      "safety": "Simulado. Las sales de hierro (III) son irritantes y manchantes.",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-precipitacion-cacl2-na2co3",
+      "titleEs": "Carbonato de calcio: CaCl2 + Na2CO3",
+      "level": [
+        "bachillerato",
+        "universidad"
+      ],
+      "topic": "precipitation",
+      "reactants": [
+        "cacl2",
+        "na2co3"
+      ],
+      "equation": "CaCl2 + Na2CO3 -> CaCO3 + 2 NaCl",
+      "effects": [
+        {
+          "type": "precipitate",
+          "colorHex": "#f5f7f9",
+          "note": "Precipitado blanco de CaCO3."
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solution",
+          "substance": "cacl2",
+          "volume_ml": 20
+        },
+        {
+          "action": "add_solution",
+          "substance": "na2co3",
+          "volume_ml": 20,
+          "note": "Prueba clásica de iones calcio: el carbonato de sodio los detecta."
+        }
+      ],
+      "explanation": "El carbonato de sodio es el reactivo clásico para detectar Ca2+ en disolución: el CaCO3 es muy insoluble. Es la base de la 'dureza' del agua.",
+      "safety": "Reactivos comunes y seguros en disolución simulada.",
+      "dH_reference_kj_per_mol": null,
+      "gas": null
+    },
+    {
+      "id": "exp-redox-cu-hno3",
+      "titleEs": "Cobre + ácido nítrico concentrado (gas NO2 marrón)",
+      "level": [
+        "bachillerato",
+        "universidad"
+      ],
+      "topic": "redox",
+      "reactants": [
+        "cu",
+        "hno3"
+      ],
+      "equation": "Cu + 4 HNO3 -> Cu(NO3)2 + 2 NO2 + 2 H2O",
+      "effects": [
+        {
+          "type": "gas",
+          "species": "NO2",
+          "note": "Vapores de color pardo-rojizo de dióxido de nitrógeno."
+        },
+        {
+          "type": "color",
+          "note": "La solución se vuelve azul verdosa por el Cu2+ disuelto."
+        },
+        {
+          "type": "exothermic"
+        }
+      ],
+      "script": [
+        {
+          "action": "add_solid",
+          "substance": "cu",
+          "mass_g": 0.5
+        },
+        {
+          "action": "add_solution",
+          "substance": "hno3",
+          "volume_ml": 30,
+          "note": "Con ácido nítrico concentrado, el cobre se disuelve liberando NO2."
+        }
+      ],
+      "explanation": "El ácido nítrico es un oxidante fuerte: oxida el cobre metálico a Cu2+ y se reduce a NO2 (gas pardo tóxico). 4 moles de HNO3 por cada mol de Cu.",
+      "safety": "El NO2 es un gas tóxico y corrosivo: en la realidad esta reacción solo se hace en campana extractora. Aquí, estrictamente simulado.",
+      "dH_reference_kj_per_mol": null,
+      "gas": "NO2"
     }
   ]
 }

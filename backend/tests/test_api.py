@@ -55,6 +55,32 @@ def test_simulator_catalog_public():
     assert len(r.json()["experiments"]) >= 15
 
 
+def test_simulator_catalog_integrity():
+    from app.domain import balancer, simulator
+
+    cat = simulator.catalog()
+    keys = {s["key"] for s in cat["substances"]}
+    assert len(cat["experiments"]) >= 20
+    ids = [e["id"] for e in cat["experiments"]]
+    assert len(ids) == len(set(ids))
+
+    for exp in cat["experiments"]:
+        assert set(exp["reactants"]) <= keys, exp["id"]
+        b = balancer.balance(exp["equation_display"])
+        assert b["verified"]["conserves_mass"], exp["id"]
+        assert b["verified"]["charge"] == 0, exp["id"]
+        additions = [
+            {"substance": k, "unit": "mol", "value": 1.0} for k in set(exp["reactants"])
+        ]
+        out = simulator.run_scene(additions, equipment="matraz")
+        assert out["verified"]["conserves_mass"], exp["id"]
+        assert out["id"] == exp["id"], exp["id"]
+
+    expected_unique = ["exp-gases-mg-hcl", "exp-redox-cu-hno3", "exp-combustion-ch4"]
+    present = {exp["id"] for exp in cat["experiments"]}
+    assert set(expected_unique) <= present
+
+
 def test_balance_endpoint():
     r = client.post("/api/v1/academic/balance", json={"equation": "C3H8 + O2 -> CO2 + H2O"})
     assert r.status_code == 200
@@ -119,6 +145,28 @@ def test_calculators():
     )
     assert r.status_code == 200
     assert abs(r.json()["mass_to_weigh_g"] - 20.0) < 0.5
+
+
+def test_oxidation_states():
+    esperado = {
+        "H2O": {"O": -2, "H": 1},
+        "H2O2": {"O": -1, "H": 1},          # peróxido
+        "CO2": {"C": 4, "O": -2},
+        "CH4": {"C": -4, "H": 1},
+        "HNO3": {"H": 1, "N": 5, "O": -2},
+        "Cl2O7": {"Cl": 7, "O": -2},
+        "Na2SO4": {"Na": 1, "S": 6, "O": -2},
+        "NaCl": {"Na": 1, "Cl": -1},
+        "Fe2O3": {"Fe": 3, "O": -2},
+        "NaH": {"Na": 1, "H": -1},          # hidruro
+    }
+    for formula, estados in esperado.items():
+        r = client.post("/api/v1/academic/calculators/oxidation-states", json={"formula": formula})
+        assert r.status_code == 200, formula
+        body = r.json()
+        assert body["balanced"], formula
+        for el, val in estados.items():
+            assert body["states"][el] == val, f"{formula}: esperaba {el} {val}, obtuvo {body['states'][el]}"
 
 
 def test_periodic():

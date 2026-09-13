@@ -8,17 +8,23 @@ from app.domain.simulator import SimulationError
 
 def test_catalog_exists():
     cat = simulator.catalog()
-    assert len(cat["experiments"]) >= 15
-    assert len(cat["substances"]) >= 20
+    assert len(cat["experiments"]) >= 20
+    assert len(cat["substances"]) >= 25
 
 
 def test_all_experiments_balance_and_run():
     data = __import__("app.data", fromlist=["load_experiments"]).load_experiments()
+
+    def unit_for(entry):
+        if entry["state"] == "S":
+            return "g"
+        if entry["state"] == "G" or not entry.get("concentrations"):
+            return "mol"
+        return "mL"
+
     for full in data["experiments"]:
         additions = [
-            {"substance": r, "unit": "g", "value": 1.0}
-            if next(s for s in data["substances"] if s["key"] == r)["state"] == "S"
-            else {"substance": r, "unit": "mL", "value": 30.0}
+            {"substance": r, "unit": unit_for(next(s for s in data["substances"] if s["key"] == r)), "value": 1.0}
             for r in full["reactants"]
         ]
         res = simulator.run_scene(additions)

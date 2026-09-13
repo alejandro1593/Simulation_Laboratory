@@ -158,6 +158,14 @@ def calc_molar_mass(body: MolarMassIn) -> dict:
         raise AppError(422, "formula_invalida", str(exc)) from exc
 
 
+@router.post("/calculators/oxidation-states", dependencies=[rate_student()])
+def calc_oxidation_states(body: MolarMassIn) -> dict:
+    try:
+        return calculators.oxidation_states(body.formula)
+    except calculators.CalculationError as exc:
+        raise AppError(422, "formula_invalida", str(exc)) from exc
+
+
 @router.post("/calculators/solution-prep", dependencies=[rate_student()])
 def calc_solution_prep(body: SolutionPrepIn) -> dict:
     try:
