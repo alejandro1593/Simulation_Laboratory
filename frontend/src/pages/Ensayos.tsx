@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { EQUIPO_LABORATORIO, PICTOGRAMAS_GHS } from "../data/equipo";
+import { FLAME_TESTS } from "../data/herramientas";
 import InstrumentSVG from "../components/InstrumentSVG";
 
 export default function Ensayos() {
@@ -84,6 +85,43 @@ export default function Ensayos() {
           )}
         </section>
       ))}
+
+      <hr className="hair-sep" />
+      <h2>Ensayo de llama</h2>
+      <p className="lead" style={{ marginBottom: 14 }}>
+        Exposición de una muestra a la llama (bunsen o mechero) sobre un alambre de nicromo;
+        el color emitido identifica el catión presente. Es un ensayo cualitativo clásico de análisis inorgánico.
+      </p>
+      <div className="grid-3">
+        {FLAME_TESTS.map((f) => (
+          <div className="card" key={f.cation} style={{ margin: 0, display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 6 }}>
+              <svg width="92" height="120" viewBox="0 0 92 120" role="img" aria-label={`Color de llama de ${f.nombre}`}>
+                <defs>
+                  <linearGradient id={`flame-${f.cation.replace(/[²⁺]/g, "")}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#fff8e1" />
+                    <stop offset="30%" stopColor={f.color} />
+                    <stop offset="100%" stopColor="#4a1e0f" />
+                  </linearGradient>
+                </defs>
+                <path d="M46 8 C64 34 78 52 78 76 a32 32 0 0 1 -64 0 C14 52 28 34 46 8 Z" fill={`url(#flame-${f.cation.replace(/[²⁺]/g, "")})`} stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+                <path d="M46 34 C56 52 60 62 60 74 a14 14 0 0 1 -28 0 C32 62 36 52 46 34 Z" fill="rgba(255,255,255,0.35)" />
+              </svg>
+            </div>
+            <h3 style={{ marginBottom: 2 }}>
+              {f.cation} <span className="muted small">{f.nombre}</span>
+            </h3>
+            <p className="small" style={{ margin: "6px 0 0" }}>{f.nota}</p>
+            <p className="muted small" style={{ marginTop: 8, marginBottom: 0 }}>
+              <span className="mono">{f.sal}</span> · {f.nombre} → {f.cation}
+            </p>
+          </div>
+        ))}
+      </div>
+      <p className="captions">
+        Colores clásicos de ensayo de llama. En laboratorio se usa un alambre de nicromo limpio,
+        muestra en ácido clorhídrico y el mechero libre de contaminaciones.
+      </p>
 
       <hr className="hair-sep" />
       <h2>Pictogramas de seguridad GHS</h2>

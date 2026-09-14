@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ACIDOS, BASES, type Acido, type Base } from "../data/herramientas";
+import { ACIDOS, BASES, INDICADORES, indicatorColor, type Acido, type Base } from "../data/herramientas";
 
 function clamp(n: number): number {
   return Math.max(0, Math.min(14, n));
@@ -61,6 +61,7 @@ function pHat(Vb: number, acid: Acido, base: Base, Ca: number, Va: number, Cb: n
 export default function Valoracion() {
   const [acidKey, setAcidKey] = useState("hcl");
   const [baseKey, setBaseKey] = useState("naoh");
+  const [indKey, setIndKey] = useState("fenol");
   const [Ca, setCa] = useState("0.1");
   const [Va, setVa] = useState("20");
   const [Cb, setCb] = useState("0.1");
@@ -68,6 +69,7 @@ export default function Valoracion() {
 
   const acid = ACIDOS.find((a) => a.key === acidKey)!;
   const base = BASES.find((b) => b.key === baseKey)!;
+  const indicator = INDICADORES.find((i) => i.key === indKey) ?? INDICADORES[0];
   const CaV = parseFloat(Ca) || 0;
   const VaV = parseFloat(Va) || 0;
   const CbV = parseFloat(Cb) || 0;
@@ -121,6 +123,12 @@ export default function Valoracion() {
             </select>
           </label>
           <label className="field">
+            Indicador
+            <select value={indKey} onChange={(e) => setIndKey(e.target.value)} aria-label="Indicador">
+              {INDICADORES.map((i) => <option key={i.key} value={i.key}>{i.nombre} (pH {i.pHi}–{i.pHf})</option>)}
+            </select>
+          </label>
+          <label className="field">
             C ácido (M) <input value={Ca} onChange={(e) => setCa(e.target.value)} inputMode="decimal" />
           </label>
           <label className="field">
@@ -151,6 +159,10 @@ export default function Valoracion() {
         {valores.valid ? (
           <>
             <svg width="100%" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Curva de valoración" style={{ maxWidth: W }}>
+              {/* Indicator transition band */}
+              <rect x={padL} y={yOf(indicator.pHf)} width={W - padL - 8} height={yOf(indicator.pHi) - yOf(indicator.pHf)} fill={indicator.colorMid ?? indicator.colorBase} opacity={0.13} rx={3} />
+              <text x={W - 6} y={yOf(indicator.pHf) + 4} fill={indicator.colorBase} fontSize="9" textAnchor="end" opacity={0.6}>{indicator.pHf}</text>
+              <text x={W - 6} y={yOf(indicator.pHi) - 3} fill={indicator.colorBase} fontSize="9" textAnchor="end" opacity={0.6}>{indicator.pHi}</text>
               {[0, 2, 4, 6, 7, 8, 10, 12, 14].map((ph) => (
                 <line key={ph} x1={padL} y1={yOf(ph)} x2={W - 8} y2={yOf(ph)} stroke={ph === 7 ? "rgba(122,162,255,0.35)" : "rgba(255,255,255,0.07)"} strokeDasharray={ph === 7 ? "" : "3 5"} />
               ))}
@@ -182,10 +194,20 @@ export default function Valoracion() {
               <input type="range" min={0} max={Math.round(valores.Vmax * 10) / 10} step={0.1} value={Math.min(VbSel, valores.Vmax)} onChange={(e) => setVbSel(parseFloat(e.target.value))} />
             </label>
             <div className="result-box" aria-label="pH seleccionado">
-              <div className="result-main">pH = {pHSel === null ? "—" : clamp(pHSel).toFixed(2)}</div>
-              <div className="muted small">
-                {pHSel === null ? "Añada base para iniciar la valoración." : pHSel > 11 ? "Exceso de base (zona básica)." : pHSel < 3 ? "Exceso de ácido (zona ácida)." : Math.abs(pHSel - 7) < 0.05 ? "Punto de equivalencia (sal neutra o hidrólisis)." : "Zona de transición o tampón."}
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 8, border: "2px solid rgba(255,255,255,0.15)", background: pHSel !== null ? indicatorColor(indicator, clamp(pHSel)) : "transparent", flexShrink: 0, transition: "background 0.25s" }} />
+                <div>
+                  <div className="result-main">pH = {pHSel === null ? "—" : clamp(pHSel).toFixed(2)}</div>
+                  <div className="muted small">
+                    {pHSel === null ? "Añada base para iniciar la valoración." : pHSel > 11 ? "Exceso de base (zona básica)." : pHSel < 3 ? "Exceso de ácido (zona ácida)." : Math.abs(pHSel - 7) < 0.05 ? "Punto de equivalencia (sal neutra o hidrólisis)." : "Zona de transición o tampón."}
+                  </div>
+                </div>
               </div>
+              {pHSel !== null && (
+                <div className="muted small" style={{ marginTop: 8 }}>
+                  <b>{indicator.nombre}</b>: {clamp(pHSel) < indicator.pHi ? "Color de forma ácida" : clamp(pHSel) > indicator.pHf ? "Color de forma básica" : `En zona de viraje (pH ${indicator.pHi}–${indicator.pHf})`}.
+                </div>
+              )}
             </div>
           </>
         ) : (

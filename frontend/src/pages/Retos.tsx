@@ -70,6 +70,92 @@ export default function Retos() {
     setNRes(null);
   }
 
+  function downloadExam() {
+    const nBal = 4, nEst = 4, nNom = 4;
+    // Preservamos el orden original pero elegimos al azar cada pregunta.
+    const bIdx = shuffle(RETOS_BALANCEO.map((_, i) => i)).slice(0, nBal).sort((a, b) => a - b);
+    const eIdx = shuffle(RETOS_ESTEQ.map((_, i) => i)).slice(0, nEst).sort((a, b) => a - b);
+    const nIdxL = shuffle(RETOS_NOMEN.map((_, i) => i)).slice(0, nNom).sort((a, b) => a - b);
+
+    const sep = "=".repeat(58);
+    const sub = "-".repeat(58);
+    const line: string[] = [];
+
+    line.push(sep);
+    line.push("  EXAMEN AUTOCORREGIBLE · MOLCORE LAB");
+    line.push(`  Fecha: ${new Date().toLocaleString("es-ES")}  ·  Tema: Química general`);
+    line.push(sep);
+    line.push("");
+    line.push("Instrucciones: resuelve sin mirar la clave (sección final).");
+    line.push("Deja tus respuestas en los espacios en blanco y compáralas al final.");
+    line.push("");
+
+    line.push(sub);
+    line.push("SECCIÓN 1 · BALANCEO  (escribe los coeficientes en orden, enteros mínimos)");
+    line.push(sub);
+    bIdx.forEach((i, k) => {
+      const r = RETOS_BALANCEO[i];
+      line.push(`${k + 1}. ${r.eq}`);
+      line.push(`   Coeficientes: ${r.partes.map(() => "___").join("   ")}`);
+      line.push("");
+    });
+
+    line.push(sub);
+    line.push("SECCIÓN 2 · ESTEQUIOMETRÍA  (responde en gramos)");
+    line.push(sub);
+    eIdx.forEach((i, k) => {
+      const r = RETOS_ESTEQ[i];
+      line.push(`${k + 1}. ${r.q}`);
+      line.push(`   ${r.ecuacion}`);
+      line.push(`   m(producto) = ______ g`);
+      line.push("");
+    });
+
+    line.push(sub);
+    line.push("SECCIÓN 3 · NOMENCLATURA  (nombra el compuesto)");
+    line.push(sub);
+    nIdxL.forEach((i, k) => {
+      const r = RETOS_NOMEN[i];
+      line.push(`${k + 1}. ${r.q}`);
+      line.push(`   Respuesta: ______`);
+      line.push("");
+    });
+
+    line.push(sub);
+    line.push("CLAVE DE RESPUESTAS");
+    line.push(sub);
+    line.push("Balanceo:");
+    bIdx.forEach((i, k) => {
+      const r = RETOS_BALANCEO[i];
+      line.push(`  ${k + 1}. ${r.coefs.join("  ")}`);
+    });
+    line.push("");
+    line.push("Estequiometría (g):");
+    eIdx.forEach((i, k) => {
+      const r = RETOS_ESTEQ[i];
+      const ans = ((r.datoGramos / r.M[0]) * (r.rel[1] / r.rel[0])) * r.M[1];
+      line.push(`  ${k + 1}. ${ans.toFixed(r.fmt)}`);
+    });
+    line.push("");
+    line.push("Nomenclatura:");
+    nIdxL.forEach((i, k) => {
+      line.push(`  ${k + 1}. ${RETOS_NOMEN[i].a}`);
+    });
+    line.push(sep);
+    line.push("Fuente: datos curados de MolCore Lab (no inventar química).");
+    line.push("Genera un examen aleatorio con el botón 'Descargar examen'.");
+
+    const blob = new Blob([line.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `examen_quimica_${new Date().toISOString().slice(0, 10)}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <section className="page">
       <h1>Retos autocorregibles</h1>
@@ -77,10 +163,13 @@ export default function Retos() {
         Practica balanceo, estequiometría y nomenclatura. Se evalúa al instante y lleva tu marcador de la sesión.
       </p>
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "14px 0" }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "14px 0", alignItems: "center" }}>
         {([["balanceo", "Balanceo"], ["esteq", "Estequiometría"], ["nomen", "Nomenclatura"]] as [Modo, string][]).map(([k, lbl]) => (
           <button key={k} className={modo === k ? "primary" : "ghost"} onClick={() => setModo(k)}>{lbl}</button>
         ))}
+        <button className="ghost" style={{ marginLeft: "auto" }} onClick={downloadExam} aria-label="Descargar examen">
+          ⬇ Descargar examen (.txt)
+        </button>
       </div>
 
       {modo === "balanceo" && (

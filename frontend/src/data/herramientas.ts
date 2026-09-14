@@ -277,6 +277,80 @@ export const COMPAT: CompatRule[] = [
   { a: "h2so4", b: "cu", tipo: "inert", titulo: "Sin reacción apreciable a 25 °C", detalle: "El cobre no es atacado por H2SO4 diluido en frío (solo gases calientes oxidantes lo atacan)." },
 ];
 
+// ------------------------------------------------ indicadores ácido-base
+export interface Indicador {
+  key: string;
+  nombre: string;
+  pHi: number;         // pH inferior del intervalo de viraje
+  pHf: number;         // pH superior del intervalo de viraje
+  colorAcido: string;  // color en pH < pHi
+  colorBase: string;   // color en pH > pHf
+  colorMid?: string;   // color intermedio (en pKa)
+}
+
+export const INDICADORES: Indicador[] = [
+  { key: "fenol", nombre: "Fenolftaleína", pHi: 8.2, pHf: 10.0, colorAcido: "rgba(255,255,255,0.05)", colorBase: "#e84393", colorMid: "#fd79a8" },
+  { key: "btb", nombre: "Azul de bromotimol", pHi: 6.0, pHf: 7.6, colorAcido: "#d4a017", colorBase: "#0984e3", colorMid: "#6c5ce7" },
+  { key: "naranja", nombre: "Naranja de metilo", pHi: 3.1, pHf: 4.4, colorAcido: "#e74c3c", colorBase: "#f1c40f", colorMid: "#e67e22" },
+  { key: "tornasol", nombre: "Tornasol rojo", pHi: 4.5, pHf: 8.3, colorAcido: "#e74c3c", colorBase: "#0984e3", colorMid: "#8e44ad" },
+  { key: "congo", nombre: "Congo rojo", pHi: 3.0, pHf: 5.0, colorAcido: "#2e86de", colorBase: "#e74c3c", colorMid: "#9b59b6" },
+];
+
+export function indicatorColor(ind: Indicador, pH: number): string {
+  if (pH <= ind.pHi) return ind.colorAcido;
+  if (pH >= ind.pHf) return ind.colorBase;
+  const t = (pH - ind.pHi) / (ind.pHf - ind.pHi);
+  if (ind.colorMid) {
+    // Three-stop interpolation via midpoint
+    if (t < 0.5) return lerpColor(ind.colorAcido, ind.colorMid, t * 2);
+    return lerpColor(ind.colorMid, ind.colorBase, (t - 0.5) * 2);
+  }
+  return lerpColor(ind.colorAcido, ind.colorBase, t);
+}
+
+function lerpColor(a: string, b: string, t: number): string {
+  const pa = parseColor(a), pb = parseColor(b);
+  const r = Math.round(pa.r + (pb.r - pa.r) * t);
+  const g = Math.round(pa.g + (pb.g - pa.g) * t);
+  const bl = Math.round(pa.b + (pb.b - pa.b) * t);
+  return `rgb(${r},${g},${bl})`;
+}
+
+function parseColor(c: string): { r: number; g: number; b: number } {
+  if (c.startsWith("rgba") || c.startsWith("rgb")) {
+    const m = c.match(/[\d.]+/g);
+    if (m) return { r: +m[0], g: +m[1], b: +m[2] };
+  }
+  if (c.startsWith("#")) {
+    const h = c.slice(1);
+    const n = parseInt(h.length === 3 ? h.split("").map((x) => x + x).join("") : h, 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  }
+  return { r: 200, g: 200, b: 200 };
+}
+
+// ------------------------------------------------ ensayo de llama (colores de flama por catión)
+export interface FlameTest {
+  cation: string;   // símbolo químico
+  nombre: string;   // nombre completo
+  color: string;    // color CSS de la llama
+  nota: string;     // observación práctica
+  sal: string;      // sal típica usada en el ensayo
+}
+
+export const FLAME_TESTS: FlameTest[] = [
+  { cation: "Li⁺", nombre: "Litio", color: "#e74c3c", nota: "Rojo carmesí intenso; NO confundir con Na⁺.", sal: "LiCl" },
+  { cation: "Na⁺", nombre: "Sodio", color: "#f39c12", nota: "Amarillo intenso; enmascara otros colores.", sal: "NaCl" },
+  { cation: "K⁺", nombre: "Potasio", color: "#9b59b6", nota: "Violeta pálido; observar a través de vidrio azul de cobalto.", sal: "KCl" },
+  { cation: "Ca²⁺", nombre: "Calcio", color: "#e67e22", nota: "Naranja rojizo; llama intensa y estable.", sal: "CaCl2" },
+  { cation: "Sr²⁺", nombre: "Estroncio", color: "#ff6b6b", nota: "Rojo escarlata; más intenso que Ca²⁺.", sal: "SrCl2" },
+  { cation: "Ba²⁺", nombre: "Bario", color: "#2ecc71", nota: "Verde amarillento; identificar con filtro de cobalto.", sal: "BaCl2" },
+  { cation: "Cu²⁺", nombre: "Cobre (II)", color: "#1abc9c", nota: "Verde azulado; la llama puede ser irregular.", sal: "CuSO4" },
+  { cation: "Mg²⁺", nombre: "Magnesio", color: "#ecf0f1", nota: "Blanco intenso; la llama de Mg no da color característico (se usa Mg metal).", sal: "MgCl2" },
+  { cation: "Fe²⁺", nombre: "Hierro (II)", color: "#d35400", nota: "Naranja con destellos dorados; llama irregular.", sal: "FeSO4" },
+  { cation: "Pb²⁺", nombre: "Plomo (II)", color: "#bdc3c7", nota: "Blanco azulado pálido; usar guantes (tóxico).", sal: "Pb(NO3)2" },
+];
+
 // ------------------------------------------------ isótopos y usos (elementos comunes)
 export const ISOTOPOS: Record<number, string> = {
   1: "¹H (99,98 %), ²H deuterio (0,015 %), ³H tritio (trazas)",
