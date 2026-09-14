@@ -361,7 +361,7 @@ export const GRUPOS_FUNCIONALES: GrupoFuncional[] = [
     formula: "R–CHO",
     grupo: "Carbonilo terminal –CHO",
     sufijo: "…-al",
-    prefijo: "oxo- (en presencia de grupos prioriores)",
+    prefijo: "oxo- (en presencia de grupos prioritarios)",
     reglas: "El carbono del –CHO es el C1 de la cadena; la cadena principal debe contenerlo y termina en -al. El H del grupo se indica en la fórmula estructural.",
     ejemplos: [
       {
@@ -419,7 +419,7 @@ export const GRUPOS_FUNCIONALES: GrupoFuncional[] = [
     sufijo: "…-oico (ácido …)",
     prefijo: "carboxi-",
     reglas:
-      "El grupo –COOH define el carbono 1. Nombre: 'ácido …oico'. Los radicales que requieran mayor prioridad (sales, ésteres, amidas) reemplazan el H y usan carboxtratamientos.",
+      "El grupo –COOH define el carbono 1. Nombre: 'ácido …oico'. Los radicales que requieran mayor prioridad (sales, ésteres, amidas) reemplazan el H y usan el prefijo carboxi-.",
     ejemplos: [
       {
         nombre: "Ácido etanoico",
@@ -474,10 +474,10 @@ export const GRUPOS_FUNCIONALES: GrupoFuncional[] = [
     id: "aminas",
     nombre: "Aminas",
     formula: "R–NH₂, R₂NH, R₃N",
-    grupo: "Nitrógeneo con pares libres (1ª, 2ª, 3ª)",
+    grupo: "Nitrógeno con pares libres (1ª, 2ª, 3ª)",
     sufijo: "…-amina",
     prefijo: "amino- (como sustituyente)",
-    reglas: "La amina más sencilla es la base (-amina). Se añade número y letras N para localizar sustituyentes sobre el nitrógeneo (N-metil…).",
+    reglas: "La amina más sencilla es la base (-amina). Se añade número y letras N para localizar sustituyentes sobre el nitrógeno (N-metil…).",
     ejemplos: [
       {
         nombre: "Metilamina",
@@ -588,7 +588,7 @@ export const GRUPOS_FUNCIONALES: GrupoFuncional[] = [
     grupo: "Sulfhidrilo –SH",
     sufijo: "…-tiol",
     prefijo: "mercapto-",
-    reglas: "Analogos del alcohol con azufre: -ol → -tiol. El nombre común usa mercaptano.",
+    reglas: "Análogos del alcohol con azufre: -ol → -tiol. El nombre común usa mercaptano.",
     ejemplos: [
       {
         nombre: "Metanotiol",
@@ -658,7 +658,7 @@ export const SERIES_HOMOLOGAS = [
     filas: [
       [2, "Eteno", "C₂H₄", "Etileno; maduración"],
       [3, "Propeno", "C₃H₆", "Propileno; polímeros"],
-      [4, "But-1-eno", "C₄H₈", "Butileno; industrias copolímeros"],
+      [4, "But-1-eno", "C₄H₈", "Butileno; copolímeros industriales"],
       [5, "Pent-1-eno", "C₅H₁₀", "Monómero"],
       [6, "Hex-1-eno", "C₆H₁₂", "Copolímero del polietileno"],
     ],
@@ -788,7 +788,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     formula: "C₂₁H₃₀O₂",
     masa: 314.46,
     gf: "Dos fenoles (resorcinol) + terpeno ciclado",
-    fuente: "Fitoquímico de Cannabis/hemp (cañamo industrial)",
+    fuente: "Fitoquímico de Cannabis/hemp (cáñamo industrial)",
     uso: "No psicoactivo; estudiado por su potencial terapéutico",
     riesgo:
       "Misma fórmula molecular que el THC: son isómeros estructurales. Su estatus legal también depende del país.",
@@ -955,7 +955,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     iupac: "Clorofila A",
     formula: "C₅₅H₇₂MgN₄O₅",
     masa: 893.49,
-    gf: "Porforina con metal central Mg (macrociclo)",
+    gf: "Porfirina con metal central Mg (macrociclo)",
     fuente: "Fotosíntesis en plantas y algas",
     uso: "Pigmento que absorbe la luz en la fotosíntesis",
     nota:

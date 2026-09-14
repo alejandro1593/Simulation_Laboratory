@@ -319,7 +319,7 @@ export default function SimBench({ scene }: { scene: SceneEvent[] }) {
           ))}
         </div>
       )}
-      <p className="captions">Los reactivos se añaden y mezclan: el color se difunde, precipita o desprende gas.</p>
+      <p className="captions">Los reactivos se añaden y mezclan: la mezcla cambia de color, precipita o desprende gas.</p>
     </div>
   );
 }

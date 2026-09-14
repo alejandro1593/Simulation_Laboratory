@@ -40,7 +40,7 @@ export default function Landing() {
             <span className="ok">   ✓ balanceada</span>
           </p>
           <p className="small muted" style={{ marginBottom: 0 }}>
-            Hidrógeno y oxígeno escalados por el kernel: conserva masa, atómos y carga
+            Hidrógeno y oxígeno escalados por el kernel: conserva masa, átomos y carga
             con aritmética exacta sobre fracciones.
           </p>
         </div>
@@ -66,7 +66,7 @@ export default function Landing() {
           <h3>Kernel determinista</h3>
           <p className="small muted" style={{ margin: "6px 0 0" }}>
             El balanceo resuelve con fracciones exactas; el cliente solo reproduce el resultado.
-            Sin cálculos flotantes ni formulas inventadas.
+            Sin cálculos flotantes ni fórmulas inventadas.
           </p>
         </div>
         <div className="card">

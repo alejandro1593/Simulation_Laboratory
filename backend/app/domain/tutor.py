@@ -41,7 +41,7 @@ def balance_with_steps(equation: str) -> dict:
         elif el in ("H", "O"):
             tip = f"Ajusta {el} al final: suele equilibrarse a través de H2O / especies con H/O."
         else:
-            tip = f"°Cuenta {el}: reactivos {lhs}, productos {rhs}. Ajusta el coeficiente de la especie con {el}."
+            tip = f"Cuenta {el}: reactivos {lhs}, productos {rhs}. Ajusta el coeficiente de la especie con {el}."
         steps.append(
             {
                 "element": el,

@@ -168,7 +168,7 @@ PRESETS: dict[str, dict] = {
                 {"a": "O", "b": "H6", "order": 1},
             ]
         ),
-        "notes": "El alcohol: el oxígeno e hidroxilo (OH) es clave en su reactividad.",
+        "notes": "El alcohol: el grupo hidroxilo (OH) es clave en su reactividad.",
     },
 }
 

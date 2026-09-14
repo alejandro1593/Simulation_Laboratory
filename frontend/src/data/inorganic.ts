@@ -1,6 +1,6 @@
 // Catálogo de química inorgánica curado.
 // Cada compuesto real se muestra con las nomenclaturas que aplican:
-//  - Tradicional (sufijos -oso/-ico, hipo-/per-, anhidridos…)
+//  - Tradicional (sufijos -oso/-ico, hipo-/per-, anhídridos…)
 //  - Stock (n.º de oxidación en números romanos)
 //  - Sistemática IUPAC de composición (prefijos mono/di/tri/tetra…)
 // NINGUNA estructura inventada: solo especies estables y reales.
@@ -72,32 +72,32 @@ export const CATALOGO_INORGANICO: Familia[] = [
   },
   {
     id: "oxidos-nometal",
-    titulo: "Óxidos no metálicos (ácidos / anhidridos)",
+    titulo: "Óxidos no metálicos (ácidos / anhídridos)",
     img: "An",
     intro:
-      "No metal + oxígeno. En nomenclatura tradicional se nombran como 'anhidrido + ácido del que derivan'. El Stock usa números romanos también para el no metal y la sistemática indica el número real de átomos.",
+      "No metal + oxígeno. En nomenclatura tradicional se nombran como 'anhídrido + ácido del que derivan'. El Stock usa números romanos también para el no metal y la sistemática indica el número real de átomos.",
     cols: [
       { k: "f", label: "Fórmula", hint: "Fórmula molecular real" },
-      { k: "trad", label: "Tradicional", hint: "anhidrido …" },
+      { k: "trad", label: "Tradicional", hint: "anhídrido …" },
       { k: "stock", label: "Stock", hint: "n.º de oxidación romano" },
       { k: "iupac", label: "Sistemática", hint: "prefijos de composición" },
     ],
     filas: [
-      { f: "CO", trad: "Anhidrido carbonoso (monóxido de carbono)", stock: "Óxido de carbono(II)", iupac: "Monóxido de carbono" },
-      { f: "CO₂", trad: "Anhidrido carbónico (dióxido de carbono)", stock: "Óxido de carbono(IV)", iupac: "Dióxido de carbono" },
-      { f: "SO₂", trad: "Anhidrido sulfuroso", stock: "Óxido de azufre(IV)", iupac: "Dióxido de azufre" },
-      { f: "SO₃", trad: "Anhidrido sulfúrico", stock: "Óxido de azufre(VI)", iupac: "Trióxido de azufre" },
+      { f: "CO", trad: "Anhídrido carbonoso (monóxido de carbono)", stock: "Óxido de carbono(II)", iupac: "Monóxido de carbono" },
+      { f: "CO₂", trad: "Anhídrido carbónico (dióxido de carbono)", stock: "Óxido de carbono(IV)", iupac: "Dióxido de carbono" },
+      { f: "SO₂", trad: "Anhídrido sulfuroso", stock: "Óxido de azufre(IV)", iupac: "Dióxido de azufre" },
+      { f: "SO₃", trad: "Anhídrido sulfúrico", stock: "Óxido de azufre(VI)", iupac: "Trióxido de azufre" },
       { f: "N₂O", trad: "Óxido nitroso", stock: "Óxido de nitrógeno(I)", iupac: "Monóxido de dinitrógeno" },
       { f: "NO", trad: "Óxido nítrico", stock: "Óxido de nitrógeno(II)", iupac: "Monóxido de nitrógeno" },
       { f: "NO₂", trad: "Óxido nitroso (dióxido de nitrógeno)", stock: "Óxido de nitrógeno(IV)", iupac: "Dióxido de nitrógeno" },
-      { f: "N₂O₅", trad: "Anhidrido nítrico", stock: "Óxido de nitrógeno(V)", iupac: "Pentaóxido de dinitrógeno" },
-      { f: "P₂O₅", trad: "Anhidrido fosfórico", stock: "Óxido de fósforo(V)", iupac: "Pentaóxido de difósforo" },
-      { f: "P₂O₃", trad: "Anhidrido fosforoso", stock: "Óxido de fósforo(III)", iupac: "Trióxido de difósforo" },
-      { f: "Cl₂O", trad: "Anhidrido hipocloroso", stock: "Óxido de cloro(I)", iupac: "Monóxido de dicloro" },
-      { f: "Cl₂O₅", trad: "Anhidrido clórico", stock: "Óxido de cloro(V)", iupac: "Pentaóxido de dicloro" },
-      { f: "Cl₂O₇", trad: "Anhidrido perclórico", stock: "Óxido de cloro(VII)", iupac: "Heptaóxido de dicloro" },
-      { f: "Br₂O₅", trad: "Anhidrido brómico", stock: "Óxido de bromo(V)", iupac: "Pentaóxido de dibromo" },
-      { f: "I₂O₅", trad: "Anhidrido yódico", stock: "Óxido de yodo(V)", iupac: "Pentaóxido de diyodo" },
+      { f: "N₂O₅", trad: "Anhídrido nítrico", stock: "Óxido de nitrógeno(V)", iupac: "Pentaóxido de dinitrógeno" },
+      { f: "P₂O₅", trad: "Anhídrido fosfórico", stock: "Óxido de fósforo(V)", iupac: "Pentaóxido de difósforo" },
+      { f: "P₂O₃", trad: "Anhídrido fosforoso", stock: "Óxido de fósforo(III)", iupac: "Trióxido de difósforo" },
+      { f: "Cl₂O", trad: "Anhídrido hipocloroso", stock: "Óxido de cloro(I)", iupac: "Monóxido de dicloro" },
+      { f: "Cl₂O₅", trad: "Anhídrido clórico", stock: "Óxido de cloro(V)", iupac: "Pentaóxido de dicloro" },
+      { f: "Cl₂O₇", trad: "Anhídrido perclórico", stock: "Óxido de cloro(VII)", iupac: "Heptaóxido de dicloro" },
+      { f: "Br₂O₅", trad: "Anhídrido brómico", stock: "Óxido de bromo(V)", iupac: "Pentaóxido de dibromo" },
+      { f: "I₂O₅", trad: "Anhídrido yódico", stock: "Óxido de yodo(V)", iupac: "Pentaóxido de diyodo" },
     ],
   },
   {
@@ -105,7 +105,7 @@ export const CATALOGO_INORGANICO: Familia[] = [
     titulo: "Peróxidos",
     img: "Px",
     intro:
-      "Contienen el grupo O₂²⁻ (dos oxígenos unidos entre sí, n.º de oxidación −1). El más famoso es el agua oxigenada. La sistemática usa el anión 'peróxido' (o 'dioxido' según IUPAC 2005).",
+      "Contienen el grupo O₂²⁻ (dos oxígenos unidos entre sí, n.º de oxidación −1). El más famoso es el agua oxigenada. La sistemática usa el anión 'peróxido' (o 'dióxido' según IUPAC 2005).",
     cols: [
       { k: "f", label: "Fórmula", hint: "Contiene O₂²⁻" },
       { k: "nb", label: "Nombre habitual", hint: "uso común" },

@@ -172,7 +172,7 @@ function generate(seed: number, id: number): Problem {
     const V = (n * R * (T + 273.15)) / P;
     return {
       id, type, tipo: "Gas ideal (PV = nRT)",
-      statement: `Un gas con n = ${fmtNice(n)} mol ocupa la presión de ${fmtNice(P)} atm a ${T} °C. ¿Qué volumen ocupa? (R = 0.082 atm·L/(mol·K))`,
+      statement: `Un gas con n = ${fmtNice(n)} mol ejerce una presión de ${fmtNice(P)} atm a ${T} °C. ¿Qué volumen ocupa? (R = 0.082 atm·L/(mol·K))`,
       explain: "PV = nRT → V = nRT/P",
       fields: [{ key: "v", label: "Volumen", unit: "L" }],
       answers: [V],
@@ -344,7 +344,7 @@ export default function Practice() {
         )}
         {state === "bad" && !showSol && (
           <div className="qres bad" style={{ marginTop: 14 }}>
-            <b>No coincide.</b> Revisa unidades y de nuevo; usa «Ver solución» si lo necesitas.
+            <b>No coincide.</b> Revisa unidades e inténtalo de nuevo; usa «Ver solución» si lo necesitas.
           </div>
         )}
       </div>

@@ -104,7 +104,7 @@ export default function Valoracion() {
     <section className="page">
       <h1>Valoración ácido-base</h1>
       <p className="muted" style={{ marginTop: -8 }}>
-        Curva de pH por Volumen de valorante; se calcula el punto de equivalencia paso a paso.
+        Curva de pH por volumen de valorante; se calcula el punto de equivalencia paso a paso.
       </p>
 
       <div className="card" style={{ margin: "14px 0", display: "flex", flexDirection: "column", gap: 10 }}>

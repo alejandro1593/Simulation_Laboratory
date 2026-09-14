@@ -32,7 +32,7 @@ export default function Ensayos() {
       <div className="filters">
         <input
           className="search"
-          placeholder="Buscar instrumento (bureta, mufla, pH-metro, campana…)…"
+          placeholder="Buscar instrumento (bureta, mufla, pH-metro, campana…)"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />

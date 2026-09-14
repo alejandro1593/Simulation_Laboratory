@@ -432,7 +432,7 @@ const TOPICS: Topic[] = [
       },
       {
         heading: "Masa atómica",
-        body: "La masa atómica estándar de un elemento es el promedio ponderado de las masas de sus isótopos naturales, en unidades de masa atónica (u). 1 u ≈ 1.66054 × 10⁻²⁷ kg. Se define tomando ¹²C como exactamente 12 u.",
+        body: "La masa atómica estándar de un elemento es el promedio ponderado de las masas de sus isótopos naturales, en unidades de masa atómica (u). 1 u ≈ 1.66054 × 10⁻²⁷ kg. Se define tomando ¹²C como exactamente 12 u.",
         formulas: ["Masa atómica (tabla) = Σ(fᵢ × Aᵢ) donde fᵢ es la fracción isotópica"],
       },
     ],
@@ -445,7 +445,7 @@ const TOPICS: Topic[] = [
     sections: [
       {
         heading: "Organización",
-        body: "La tabla periódica ordena los 118 elementos por número atómico creciente. Las filas son períodos (1–7), las columnas son grupos (1–18). Los bloques s, p, d, f corresponden al subnivel del último electrón. Los lantánidos (La–Lu) y actinidos (Ac–Lr) se muestran aparte.",
+        body: "La tabla periódica ordena los 118 elementos por número atómico creciente. Las filas son períodos (1–7), las columnas son grupos (1–18). Los bloques s, p, d, f corresponden al subnivel del último electrón. Los lantánidos (La–Lu) y actínidos (Ac–Lr) se muestran aparte.",
       },
       {
         heading: "Propiedades periódicas",
@@ -514,13 +514,13 @@ const TOPICS: Topic[] = [
     sections: [
       {
         heading: "Compuestos binarios iónicos",
-        body: "Metal + no metal. El metal mantiene su nombre; el no metal termina en -uro. Para metales con varios estados de oxidación, se usa la nomenclatura clásica (nummeral romano) o la Stock (número entre paréntesis).",
+        body: "Metal + no metal. El metal mantiene su nombre; el no metal termina en -uro. Para metales con varios estados de oxidación, se usa la nomenclatura clásica (numeral romano) o la Stock (número entre paréntesis).",
         example: "NaCl = cloruro de sodio; FeCl₃ = cloruro de hierro(III) = cloruro férrico; FeCl₂ = cloruro de hierro(II) = cloruro ferroso.",
       },
       {
         heading: "Compuestos binarios covalentes",
         body: "No metal + no metal. Se usan prefijos greco-latinos (mono-, di-, tri-, tetra-, penta-, hexa-, hepta-, octa-, nona-, deca-). El primero lleva mono- solo si hay un solo átomo del elemento.",
-        example: "CO₂ = dióxido de carbono; N₂O₅ = pentóxido de dinitrógeno; PCl₅ = pentocloruro de fósforo.",
+        example: "CO₂ = dióxido de carbono; N₂O₅ = pentóxido de dinitrógeno; PCl₅ = pentacloruro de fósforo.",
       },
       {
         heading: "Ácidos",
@@ -604,7 +604,7 @@ const TOPICS: Topic[] = [
     id: "acides-base",
     title: "Ácidos, bases y pH",
     level: "intermedio",
-    summary: "Definiciones (Brønsted-Lowry, Lewis), constante de acidez, pKa,缓冲, titulación.",
+    summary: "Definiciones (Brønsted-Lowry, Lewis), constante de acidez, pKa, amortiguación, titulación.",
     sections: [
       {
         heading: "Definiciones",
@@ -631,7 +631,7 @@ const TOPICS: Topic[] = [
     id: "equilibrio",
     title: "Equilibrio químico",
     level: "intermedio",
-    summary: "Constante de equilibrio Kc/Kp, principio de Le Chatelier,關係 entre Kc y Kp.",
+    summary: "Constante de equilibrio Kc/Kp, principio de Le Chatelier, relación entre Kc y Kp.",
     sections: [
       {
         heading: "Constante de equilibrio",
@@ -681,7 +681,7 @@ const TOPICS: Topic[] = [
       },
       {
         heading: "Aromáticos",
-        body: "Benceno (C₆H₆) y derivados. Aromaticidad:环 de 4n+2 electrones π (regla de Hückel). Sustitución electrofílica aromática (SEAr): nitración, halogenación, sulfonación, Friedel-Crafts.",
+        body: "Benceno (C₆H₆) y derivados. Aromaticidad: anillo de 4n+2 electrones π (regla de Hückel). Sustitución electrofílica aromática (SEAr): nitración, halogenación, sulfonación, Friedel-Crafts.",
       },
     ],
   },
@@ -693,7 +693,7 @@ const TOPICS: Topic[] = [
     sections: [
       {
         heading: "Polimerización por adición",
-        body: "Monómeros con doble enlace se enlazan abriendo el π. Ejemplos: polietileno (PE), polipropileno (PP), PVC (cloruro de polivinilo), poliestireno (PS). Se inicia con radicales libres, catálisis Ziegler-Natta o metallocenos.",
+        body: "Monómeros con doble enlace se enlazan abriendo el π. Ejemplos: polietileno (PE), polipropileno (PP), PVC (cloruro de polivinilo), poliestireno (PS). Se inicia con radicales libres, catálisis Ziegler-Natta o metalocenos.",
       },
       {
         heading: "Polimerización por condensación",
@@ -806,7 +806,7 @@ const TOPICS: Topic[] = [
         heading: "Energía libre de Gibbs",
         body: "Determina la espontaneidad. ΔG < 0 → espontáneo (exergónico). ΔG > 0 → no espontáneo (endergónico). ΔG = 0 → equilibrio.",
         formulas: ["ΔG = ΔH − TΔS", "ΔG° = −RT ln K", "ΔG = ΔG° + RT ln Q"],
-        example: "Haber-Bosch: ΔH° = −92 kJ, ΔS° = −199 J/K. A 298K: ΔG° = −92 − 298(−0.199) = −33 kJ → espontáneo. Pero a alta T, −TΔS dominaria → menos favorable.",
+        example: "Haber-Bosch: ΔH° = −92 kJ, ΔS° = −199 J/K. A 298K: ΔG° = −92 − 298(−0.199) = −33 kJ → espontáneo. Pero a alta T, −TΔS dominaría → menos favorable.",
       },
     ],
   },
@@ -814,7 +814,7 @@ const TOPICS: Topic[] = [
     id: "electroquimica",
     title: "Electroquímica",
     level: "avanzado",
-    summary: "Potenciales estándar, Nernst, pilas galvánicas, electrólisis, corrosion.",
+    summary: "Potenciales estándar, Nernst, pilas galvánicas, electrólisis, corrosión.",
     sections: [
       {
         heading: "Potenciales estándar de reducción",
@@ -845,11 +845,11 @@ const TOPICS: Topic[] = [
       },
       {
         heading: "Contaminación del agua",
-        body: "DBO (demanda biológica de oxígeno): indica materia orgánica biodegradable. Metales pesados (Pb, Hg, Cd, Cr⁶⁺) son tóxicos y bioacumulativos. Nitratos de fertilizantes causan eutrofización.",
+        body: "DBO (demanda bioquímica de oxígeno): indica materia orgánica biodegradable. Metales pesados (Pb, Hg, Cd, Cr⁶⁺) son tóxicos y bioacumulativos. Nitratos de fertilizantes causan eutrofización.",
       },
       {
         heading: "Principios de química verde",
-        body: "12 principios de Anastas y Warner: prevención, atom economy, síntesis menos peligrosa, diseño más seguro, solventes auxiliares, eficiencia energética, renovables, reducir derivados, catálisis, degradación, análisis en tiempo real, prevención de accidentes.",
+        body: "12 principios de Anastas y Warner: prevención, economía atómica, síntesis menos peligrosa, diseño más seguro, solventes auxiliares, eficiencia energética, renovables, reducir derivados, catálisis, degradación, análisis en tiempo real, prevención de accidentes.",
       },
     ],
   },

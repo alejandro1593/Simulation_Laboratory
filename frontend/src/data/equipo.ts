@@ -24,7 +24,7 @@ export const EQUIPO_LABORATORIO: CategoriaEquipo[] = [
     ico: "🧪",
     intro: "Recipientes y piezas de vidrio de borosilicato para contener, medir y reaccionar.",
     items: [
-      { n: "Vaso de precipitados", en: "Beaker", uso: "Contener y calentar disoluciones; no mide con precisión.", svg: "vaso-precipitados", riesgo: "Cada lectura: roto. Nunca en baño de hielo reseco." },
+      { n: "Vaso de precipitados", en: "Beaker", uso: "Contener y calentar disoluciones; no mide con precisión.", svg: "vaso-precipitados", riesgo: "Puede romperse: evitar choques térmicos. No sumergirlo en baño de hielo seco." },
       { n: "Matraz Erlenmeyer", en: "Erlenmeyer flask", uso: "Mezclar y calentar con menos evaporación; ideal para valoraciones.", svg: "matraz-erlenmeyer" },
       { n: "Matraz aforado", en: "Volumetric flask", uso: "Preparar disoluciones de volumen exacto (aforo).", svg: "matraz-aforado" },
       { n: "Matraz kitasato", en: "Kitasato flask", uso: "Filtración a vacío emparejado con el embudo Büchner.", svg: "matraz-kitasato" },
@@ -41,7 +41,7 @@ export const EQUIPO_LABORATORIO: CategoriaEquipo[] = [
       { n: "Varilla de vidrio", en: "Glass rod", uso: "Agitar y guiar el vertido sin rayar el vidrio.", svg: "varilla-vidrio" },
       { n: "Crisol y tapa", en: "Crucible with lid", uso: "Calcinar a alta temperatura sobre la mufla.", svg: "crisol-tapa" },
       { n: "Mortero y pistilo", en: "Mortar and pestle", uso: "Moler y homogeneizar sólidos finos.", svg: "mortero-pistilo" },
-      { n: "Placa de Petri", en: "Petri dish", uso: "Cultivios microbiológicos y observación de muestras.", svg: "placa-petri" },
+      { n: "Placa de Petri", en: "Petri dish", uso: "Cultivos microbiológicos y observación de muestras.", svg: "placa-petri" },
       { n: "Frasco lavador", en: "Wash bottle", uso: "Añadir agua destilada en puntos exactos.", svg: "frasco-lavador" },
     ],
   },
@@ -53,7 +53,7 @@ export const EQUIPO_LABORATORIO: CategoriaEquipo[] = [
     items: [
       { n: "Balanza analítica", en: "Analytical balance", uso: "Masa con precisión de 0.1 mg; recinto cerrado contra corrientes.", svg: "balanza-analitica", riesgo: "Manejo delicado; calibrar con patrones periódicamente." },
       { n: "Balanza granataria", en: "Top-loading balance", uso: "Pesadas rápidas poco exigentes (0.1–0.01 g).", svg: "balanza-granataria" },
-      { n: "Termómetro", en: "Thermometer", uso: "Medir temperatura; inflado de mercurio prohibido: usar alcohol digital cuando se pueda.", svg: "termometro" },
+      { n: "Termómetro", en: "Thermometer", uso: "Medir temperatura; los de mercurio están prohibidos: usar alcohol digital cuando se pueda.", svg: "termometro" },
       { n: "pH-metro", en: "pH meter", uso: "Medir pH en disolución con electrodo de vidrio; calibrar con tampones.", svg: "ph-metro" },
       { n: "Espectrofotómetro UV-Vis", en: "UV-Vis spectrophotometer", uso: "Cuantificar sustancias por absorbancia de luz.", svg: "espectrofotometro-uv-vis" },
       { n: "Refractómetro", en: "Refractometer", uso: "Medir el índice de refracción (pureza, concentración).", svg: "refractometro" },
@@ -85,7 +85,7 @@ export const EQUIPO_LABORATORIO: CategoriaEquipo[] = [
     items: [
       { n: "Papel de filtro", en: "Filter paper", uso: "Filtrar suspensiones por retención del sólido.", svg: "papel-filtro" },
       { n: "Embudo Büchner + kitasato", en: "Büchner filtration kit", uso: "Filtración a vacío rápida y lavado eficaz del precipitado.", svg: "buchner-kit" },
-      { n: "Centrífuga", en: "Centrifuge", uso: "Sedimentar partículas suspensas por fuerza centrífuga.", svg: "centrifuga", riesgo: "Contra-balancear tubos SIEMPRE antes de girar." },
+      { n: "Centrífuga", en: "Centrifuge", uso: "Sedimentar partículas suspensas por fuerza centrífuga.", svg: "centrifuga", riesgo: "Contrabalancear tubos SIEMPRE antes de girar." },
       { n: "Columna de destilación fraccionada", en: "Fractionating column", uso: "Separar líquidos con puntos de ebullición cercanos.", svg: "columna-fraccionada" },
       { n: "Cromatografía en capa fina (CCF/TLC)", en: "Thin-layer chromatography", uso: "Seguir el avance de reacciones y comprobar pureza.", svg: "ccf-tlc" },
       { n: "Tamiz / tamices", en: "Sieve set", uso: "Clasificar sólidos por tamaño de partícula.", svg: "tamiz" },
@@ -137,6 +137,6 @@ export const PICTOGRAMAS_GHS = [
   { id: "g05", codigo: "GHS05", nombre: "Corrosivo", sentido: "Destruye tejidos y materiales metálicos." },
   { id: "g06", codigo: "GHS06", nombre: "Tóxico agudo", sentido: "Peligro de muerte o daño grave por ingestión, inhalación o contacto." },
   { id: "g07", codigo: "GHS07", nombre: "Irritante / nocivo", sentido: "Irrita piel, ojos o vías respiratorias." },
-  { id: "g08", codigo: "GHS08", nombre: "Peligro para la salud", sentido: "Cancerígeno, mutageno o tóxico para la reproducción." },
+  { id: "g08", codigo: "GHS08", nombre: "Peligro para la salud", sentido: "Cancerígeno, mutágeno o tóxico para la reproducción." },
   { id: "g09", codigo: "GHS09", nombre: "Peligroso para el medio ambiente", sentido: "Tóxico para la vida acuática y ecosistemas." },
 ];

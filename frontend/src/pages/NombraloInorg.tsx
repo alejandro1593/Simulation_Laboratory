@@ -46,12 +46,12 @@ const DATA: Entry[] = [
   {
     id: "caco3", nombre: "Caliza", iupac: "Carbonato de calcio", formula: "CaCO₃", formulaF: "CaCO3",
     aceptados: ["caco3", "carbonato de calcio", "caliza", "cal", "tiza", "mármol"],
-    uso: "Construcción, antácidos, fabricación de cemento",
+    uso: "Construcción, antiácidos, fabricación de cemento",
   },
   {
     id: "fe2o3", nombre: "Óxido férrico", iupac: "Óxido de hierro(III)", formula: "Fe₂O₃", formulaF: "Fe2O3",
-    aceptados: ["fe2o3", "oxido de hierro", "óxido de hierro", "oxido ferrico", "óxido férrico", "herrumbe"],
-    uso: "Pigmento rojo (óxido), cofre, pinturas anticorrosivas",
+    aceptados: ["fe2o3", "oxido de hierro", "óxido de hierro", "oxido ferrico", "óxido férrico", "herrumbre", "herrumbe"],
+    uso: "Pigmento rojo (óxido), pinturas anticorrosivas",
   },
   {
     id: "nh3", nombre: "Amoniaco", iupac: "Amoníaco", formula: "NH₃", formulaF: "NH3",
@@ -59,7 +59,7 @@ const DATA: Entry[] = [
     uso: "Fertilizantes, refrigeración, limpieza doméstica",
   },
   {
-    id: "cuo", nombre: "Óxido cobrillo", iupac: "Óxido de cobre(II)", formula: "CuO", formulaF: "CuO",
+    id: "cuo", nombre: "Óxido cúprico", iupac: "Óxido de cobre(II)", formula: "CuO", formulaF: "CuO",
     aceptados: ["cuo", "oxido de cobre", "óxido de cobre", "óxido cúprico", "oxido cuprico", "péndulo de los sacerdotes"],
     uso: "Cerámica, pigmento azul, catalizador",
   },
@@ -154,7 +154,7 @@ export default function NombraloInorg() {
       <h1>Nómbralo: compuestos inorgánicos</h1>
       <p className="lead">
         {mode === "name2formula"
-          ? "Dado el nombre del compuesto, escribe su fórmula química. Acepta notation normal (H2O) o unicode (H₂O)."
+          ? "Dado el nombre del compuesto, escribe su fórmula química. Acepta notación normal (H2O) o unicode (H₂O)."
           : "Dada la fórmula química, escribe su nombre (común, tradicional o IUPAC)."
         } Compuestos reales y estables, nada inventado.
       </p>

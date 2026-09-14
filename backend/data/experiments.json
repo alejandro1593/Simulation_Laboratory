@@ -737,7 +737,7 @@
         {
           "type": "precipitate",
           "colorHex": "#5f9ce8",
-          "note": "Precipitado azul gelloso de Cu(OH)2."
+          "note": "Precipitado azul geloso de Cu(OH)2."
         }
       ],
       "script": [
@@ -795,7 +795,7 @@
         }
       ],
       "explanation": "El KI cataliza la descomposición del peróxido: 2 H2O2 → 2 H2O + O2. El oxígeno atrapado por el detergente crea la espuma gigante.",
-      "safety": "Klásico pero siempre con gafas; la espuma contiene peróxido residual que puede irritar.",
+      "safety": "Clásico pero siempre con gafas; la espuma contiene peróxido residual que puede irritar.",
       "dH_reference_kj_per_mol": null,
       "gas": "O2"
     },
@@ -830,7 +830,7 @@
           "mass_g": 1
         }
       ],
-      "explanation": "El zinc es más reductor que el cobre: cede electrones y disuelve como Zn2+, depositando cobre metálico.",
+      "explanation": "El zinc es más reductor que el cobre: cede electrones y se disuelve como Zn2+, depositando cobre metálico.",
       "safety": "Reacción segura simulada; la serie de actividad metálica explica por qué ocurre.",
       "dH_reference_kj_per_mol": null,
       "gas": null
@@ -1122,7 +1122,7 @@
           "volume_ml": 90
         }
       ],
-      "explanation": "El etanol (alcohol con grupo -OH) arde dando CO2 y H2O. Es la reacción que aprovechan los bioetanol y las lámparas de alcohol.",
+      "explanation": "El etanol (alcohol con grupo -OH) arde dando CO2 y H2O. Es la reacción que aprovechan el bioetanol y las lámparas de alcohol.",
       "safety": "Simulación de llama. El etanol es inflamable; el vapor puede arder lejos de la fuente encendida.",
       "dH_reference_kj_per_mol": -1367.0,
       "gas": "CO2"
