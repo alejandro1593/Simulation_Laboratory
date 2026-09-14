@@ -12,6 +12,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import MiProgreso from "./pages/MiProgreso";
 import NomenclaturaTutorial from "./pages/NomenclaturaTutorial";
+import Nombralo from "./pages/Nombralo";
 import OrganicCatalog from "./pages/OrganicCatalog";
 import PeriodicTable from "./pages/PeriodicTable";
 import Register from "./pages/Register";
@@ -99,6 +100,14 @@ export default function App() {
           element={
             <AcademicZone>
               <NomenclaturaTutorial />
+            </AcademicZone>
+          }
+        />
+        <Route
+          path="/catalogo/organico/nombralo"
+          element={
+            <AcademicZone>
+              <Nombralo />
             </AcademicZone>
           }
         />

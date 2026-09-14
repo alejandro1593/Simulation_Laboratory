@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import MoleculeSVG from "../components/MoleculeSVG";
 import SkeletalFormula from "../components/SkeletalFormula";
 import { GRUPOS_FUNCIONALES, PRIORIDADES_GRUPOS, SERIES_HOMOLOGAS, type Ejemplo, type GrupoFuncional } from "../data/organic";
@@ -123,6 +124,12 @@ export default function NomenclaturaTutorial() {
         raíces para la cadena, localizadores para las posiciones y sufijos/prefijos para los
         grupos funcionales. Aquí lo desmontamos paso a paso con ejemplos interactivos.
       </p>
+
+      <div className="filters" style={{ marginBottom: 6 }}>
+        <Link className="chip" to="/catalogo/organico/nombralo" style={{ textDecoration: "none" }}>
+          🧬 Nómbralo: adivina la molécula por su esqueleto
+        </Link>
+      </div>
 
       <hr className="hair-sep" />
       <h2>El método en 5 pasos</h2>

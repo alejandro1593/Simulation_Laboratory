@@ -1,14 +1,19 @@
+import { useState } from "react";
 import type { Mol } from "../data/organic";
 
 interface Props {
   mol: Mol;
   width?: number;
   height?: number;
+  interactive?: boolean;
+  onAtom?: (idx: number | null) => void;
+  onBond?: (idx: number | null) => void;
 }
 
 // Fórmula esqueletal: los carbonos son vértices implícitos (sin etiqueta ni H),
 // los heteroátomos se etiquetan en color y el grupo funcional se resalta en verde menta.
 // Render alto contraste para que enlaces y grupos se aprecien con nitidez.
+// Con `interactive` cada átomo y enlace responde al cursor (tooltip + realce).
 
 const SYM_COLOR: Record<string, string> = {
   O: "#ff7b7b",
@@ -19,6 +24,18 @@ const SYM_COLOR: Record<string, string> = {
   F: "#58d6c8",
   I: "#b06ce8",
   H: "#e5ecf8",
+};
+
+const SYM_NAME: Record<string, string> = {
+  C: "Carbono",
+  O: "Oxígeno",
+  N: "Nitrógeno",
+  S: "Azufre",
+  Cl: "Cloro",
+  Br: "Bromo",
+  F: "Flúor",
+  I: "Yodo",
+  H: "Hidrógeno",
 };
 
 const BOND = "#dfe7f4";
@@ -34,8 +51,14 @@ const isCarbon = (a: { s?: string; txt?: string }): boolean => {
   return false;
 };
 
-export default function SkeletalFormula({ mol, width = 340, height = 180 }: Props) {
+export default function SkeletalFormula({ mol, width = 340, height = 180, interactive = false, onAtom, onBond }: Props) {
   if (!mol.atoms.length) return <div className="muted" />;
+
+  const [hovA, setHovA] = useState<number | null>(null);
+  const [hovB, setHovB] = useState<number | null>(null);
+
+  const setA = (idx: number | null) => { setHovA(idx); if (onAtom) onAtom(idx); };
+  const setB = (idx: number | null) => { setHovB(idx); if (onBond) onBond(idx); };
 
   const xs = mol.atoms.map((a) => a.x);
   const ys = mol.atoms.map((a) => a.y);
@@ -73,14 +96,29 @@ export default function SkeletalFormula({ mol, width = 340, height = 180 }: Prop
 
   const hiA = new Set(mol.hiA ?? []);
 
+  const bondTitle = (o: number) => (o === 2 ? "Enlace doble" : o === 3 ? "Enlace triple" : "Enlace simple");
+
   const bondLines: React.ReactNode[] = [];
   bonds.forEach((b, i) => {
-    const base = b.hi ? ACCENT : BOND;
-    const w = b.hi ? 3.4 : 2.8;
+    const hov = hovB === i && interactive;
+    const base = b.hi || hov ? ACCENT : BOND;
+    const w = b.hi || hov ? 3.6 : 2.8;
     const glow = (x1: number, y1: number, x2: number, y2: number) =>
-      b.hi ? (
+      b.hi || hov ? (
         <line key={`g${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={ACCENT} strokeOpacity={0.35} strokeWidth={w * 2.1} strokeLinecap="round" />
       ) : null;
+    const hit = interactive ? (
+      <line
+        key={`hit${i}`}
+        x1={b.ax} y1={b.ay} x2={b.bx} y2={b.by}
+        stroke="transparent" strokeWidth={14}
+        style={{ cursor: "pointer" }}
+        onMouseEnter={() => setB(i)}
+        onMouseLeave={() => setB(null)}
+      >
+        {interactive && <title>{bondTitle(b.o)}</title>}
+      </line>
+    ) : null;
     if (b.o === 1) {
       bondLines.push(glow(b.ax, b.ay, b.bx, b.by));
       bondLines.push(<line key={i} x1={b.ax} y1={b.ay} x2={b.bx} y2={b.by} stroke={base} strokeWidth={w} strokeLinecap="round" />);
@@ -112,31 +150,44 @@ export default function SkeletalFormula({ mol, width = 340, height = 180 }: Prop
       bondLines.push(<line key={`${i}b`} x1={b.ax} y1={b.ay} x2={b.bx} y2={b.by} stroke={base} strokeWidth={w} strokeLinecap="round" />);
       bondLines.push(<line key={`${i}c`} x1={c1} y1={c2} x2={d1} y2={d2} stroke={base} strokeWidth={w} strokeLinecap="round" />);
     }
+    bondLines.push(hit);
   });
 
-  const atomNodes = mol.atoms.map((at) => {
+  const atomNodes = mol.atoms.map((at, idx) => {
     const cx = px(at.x);
     const cy = py(at.y);
     const hi = hiA.has(at.id);
+    const hov = hovA === idx && interactive;
     if (isCarbon(at)) {
       const r = Math.min(Math.max(scale * 0.16, 2), 4.2);
       return (
-        <g key={at.id}>
+        <g key={at.id} style={interactive ? { cursor: "pointer" } : undefined}>
           {hi && <circle cx={cx} cy={cy} r={r * 2.4} fill={ACCENT} opacity={0.32} />}
-          <circle cx={cx} cy={cy} r={r} fill={hi ? ACCENT : "#eef3fa"} />
+          {(hov || hi) && <circle cx={cx} cy={cy} r={r * 2} fill="none" stroke={ACCENT} strokeWidth={1.8} />}
+          <circle cx={cx} cy={cy} r={r} fill={hi || hov ? ACCENT : "#eef3fa"} />
+          {interactive && (
+            <circle
+              cx={cx} cy={cy} r={r * 3.2} fill="transparent"
+              onMouseEnter={() => setA(idx)}
+              onMouseLeave={() => setA(null)}
+            >
+              <title>Carbono</title>
+            </circle>
+          )}
         </g>
       );
     }
     const sym = at.s || at.txt || "?";
-    const color = hi ? ACCENT : SYM_COLOR[sym] ?? "#cfd8ea";
+    const color = hi || hov ? ACCENT : SYM_COLOR[sym] ?? "#cfd8ea";
     const fs = Math.min(Math.max(scale * 0.5, 12), 34);
     return (
-      <g key={at.id}>
-        {hi && (
+      <g key={at.id} style={interactive ? { cursor: "pointer" } : undefined}>
+        {hi && !hov && (
           <circle cx={cx} cy={cy} r={fs * 0.78} fill={ACCENT} opacity={0.18}>
             <title>Grupo funcional</title>
           </circle>
         )}
+        {hov && <circle cx={cx} cy={cy} r={fs * 0.85} fill="none" stroke={ACCENT} strokeWidth={1.8} opacity={0.9} />}
         <text
           x={cx}
           y={cy + fs * 0.08}
@@ -144,14 +195,17 @@ export default function SkeletalFormula({ mol, width = 340, height = 180 }: Prop
           dominantBaseline="central"
           fontFamily='"Segoe UI", system-ui, sans-serif'
           fontWeight={700}
-          fontSize={fs}
+          fontSize={hov ? fs + 2 : fs}
           fill={color}
           stroke="rgba(8, 14, 24, 0.9)"
           strokeWidth={fs * 0.34}
           paintOrder="stroke"
           strokeLinejoin="round"
+          onMouseEnter={() => setA(idx)}
+          onMouseLeave={() => setA(null)}
         >
           {sym}
+          {interactive && <title>{SYM_NAME[sym] ?? sym}</title>}
         </text>
       </g>
     );
@@ -172,7 +226,14 @@ export default function SkeletalFormula({ mol, width = 340, height = 180 }: Prop
   })();
 
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Estructura esqueletal">
+    <svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-label="Estructura esqueletal"
+      onMouseLeave={() => { setA(null); setB(null); }}
+    >
       <g>{ring}</g>
       <g>{bondLines}</g>
       <g>{atomNodes}</g>

@@ -32,6 +32,7 @@ const groups: NavGroup[] = [
       { to: "/catalogo/inorganico", label: "Inorgánico" },
       { to: "/catalogo/organico", label: "Orgánico" },
       { to: "/catalogo/organico/aprender", label: "Orgánico · Nomenclatura" },
+      { to: "/catalogo/organico/nombralo", label: "Orgánico · Nómbralo" },
     ],
   },
   {

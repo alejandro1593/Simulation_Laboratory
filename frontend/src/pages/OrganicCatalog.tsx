@@ -56,6 +56,9 @@ export default function OrganicCatalog() {
         <Link className="chip on" to="/catalogo/organico/aprender" style={{ textDecoration: "none" }}>
           ✏️ Aprende a nombrar
         </Link>
+        <Link className="chip" to="/catalogo/organico/nombralo" style={{ textDecoration: "none" }}>
+          🧬 Nómbralo
+        </Link>
         <input
           className="search"
           placeholder="Buscar grupo o molécula (etanol, cetona, –OH, aldehído…)…"

@@ -1269,6 +1269,37 @@ canvas.builder-canvas {
   padding-left: 18px;
 }
 
+.insp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 26px;
+  margin: 2px 0 8px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px dashed var(--hair-soft);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.fact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.fact > div {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--hair-soft);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
 .serie-table td {
   font-family: var(--mono);
   font-size: 13px;
