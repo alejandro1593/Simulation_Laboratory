@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { CATALOGO_INORGANICO, SISTEMAS, buscarInorganico } from "../data/inorganic";
 
 export default function InorganicCatalog() {
@@ -34,6 +35,9 @@ export default function InorganicCatalog() {
       </div>
 
       <div className="filters">
+        <Link className="chip" to="/catalogo/inorganico/nombralo" style={{ textDecoration: "none" }}>
+          🧂 Nómbralo
+        </Link>
         <input
           className="search"
           placeholder="Buscar compuesto o nomenclatura (óxido férrico, CO₂, permanganato…)…"

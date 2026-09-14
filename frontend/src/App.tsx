@@ -15,6 +15,7 @@ import MiProgreso from "./pages/MiProgreso";
 import Practice from "./pages/Practice";
 import NomenclaturaTutorial from "./pages/NomenclaturaTutorial";
 import Nombralo from "./pages/Nombralo";
+import NombraloInorg from "./pages/NombraloInorg";
 import OrganicCatalog from "./pages/OrganicCatalog";
 import PeriodicTable from "./pages/PeriodicTable";
 import Register from "./pages/Register";
@@ -78,6 +79,14 @@ export default function App() {
           element={
             <AcademicZone>
               <Ensayos />
+            </AcademicZone>
+          }
+        />
+        <Route
+          path="/catalogo/inorganico/nombralo"
+          element={
+            <AcademicZone>
+              <NombraloInorg />
             </AcademicZone>
           }
         />
