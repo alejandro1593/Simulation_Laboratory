@@ -1,0 +1,6 @@
+.venv
+__pycache__
+*.pyc
+molcore.db
+tests
+data/*.db

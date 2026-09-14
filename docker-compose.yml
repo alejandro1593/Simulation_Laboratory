@@ -1,0 +1,35 @@
+# MolCore Lab · stack local equivalente al despliegue de Render
+# Levanta: postgres + api (FastAPI) + web (nginx que proxya /api a la api).
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: molcore
+      POSTGRES_PASSWORD: molcore
+      POSTGRES_DB: molcore
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://molcore:molcore@postgres:5432/molcore
+      JWT_SECRET: dev-secret-cambia-me-por-favor
+    depends_on:
+      - postgres
+
+  web:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    environment:
+      API_UPSTREAM: http://api:8000
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

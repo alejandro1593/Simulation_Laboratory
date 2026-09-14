@@ -1,0 +1,41 @@
+# Render Blueprint · MolCore Lab
+# Despliegue de prueba (tier gratis): web (nginx) + api (FastAPI) + PostgreSQL.
+# - La web sirve el frontend y proxya /api al backend: mismo origen, sin CORS.
+# - DEploy automático desde GitHub al hacer push a main (conectar en el dashboard).
+# - Nota tier gratis: la base Postgres expira a los 30 días; sube el plan si va a producción.
+
+databases:
+  - name: molcore-db
+    databaseName: molcore
+    user: molcore
+    plan: free
+    ipAllowList: []
+
+services:
+  - type: web
+    name: molcore-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    plan: free
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: molcore-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DEBUG
+        value: "false"
+
+  - type: web
+    name: molcore-web
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
+    plan: free
+    envVars:
+      - key: API_UPSTREAM
+        fromService:
+          name: molcore-api
+          type: web
+          property: host
