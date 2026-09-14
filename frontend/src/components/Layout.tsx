@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 
 interface NavItem {
@@ -23,22 +23,29 @@ const groups: NavGroup[] = [
     ],
   },
   {
-    title: "Tabla",
-    items: [{ to: "/tabla", label: "Periódica" }],
-  },
-  {
     title: "Catálogos",
     items: [
       { to: "/catalogo/inorganico", label: "Inorgánico" },
       { to: "/catalogo/organico", label: "Orgánico" },
-      { to: "/catalogo/organico/aprender", label: "Orgánico · Nomenclatura" },
-      { to: "/catalogo/organico/nombralo", label: "Orgánico · Nómbralo" },
+      { to: "/catalogo/organico/aprender", label: "Nomenclatura orgánica" },
+      { to: "/catalogo/organico/nombralo", label: "Nómbralo" },
+    ],
+  },
+  {
+    title: "Aprender",
+    items: [
+      { to: "/aprender", label: "Centro de aprendizaje" },
+      { to: "/aprender#fundamentos", label: "Fundamentos" },
+      { to: "/aprender#general", label: "Química general" },
+      { to: "/aprender#industria", label: "Industria" },
+      { to: "/aprender#calculadoras", label: "Calculadoras" },
     ],
   },
   {
     title: "Herramientas",
     items: [
-      { to: "/progreso", label: "Progreso" },
+      { to: "/progreso", label: "Mi progreso" },
+      { to: "/calculadora", label: "Calculadora" },
       { to: "/soluciones", label: "Soluciones" },
       { to: "/valoracion", label: "Valoración" },
       { to: "/termoquimica", label: "Termoquímica" },
@@ -46,13 +53,14 @@ const groups: NavGroup[] = [
       { to: "/isomeria", label: "Isomería" },
       { to: "/retos", label: "Retos" },
       { to: "/constructor", label: "Constructor" },
-      { to: "/calculadora", label: "Calculadora" },
     ],
   },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <div className="app">
       <header className="topbar">
@@ -60,33 +68,30 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <span className="brand-mark">⬢</span> MolCore Lab
         </Link>
         <nav className="nav">
+          <NavLink
+            to="/tabla"
+            className={({ isActive }) => (isActive ? "nav-pill active" : "nav-pill")}
+          >
+            Periódica
+          </NavLink>
+
           {groups.map((g, gi) => (
-            <div key={g.title} className="nav-group" style={{ display: "flex", gap: "3px", alignItems: "center" }}>
-              {gi > 0 && (
-                <span style={{ color: "var(--faint)", margin: "0 6px", fontSize: 13 }}>·</span>
-              )}
-              <span
-                style={{
-                  fontFamily: "var(--mono)",
-                  fontSize: 10.5,
-                  letterSpacing: 1,
-                  textTransform: "uppercase",
-                  color: "var(--faint)",
-                  marginRight: 5,
-                  whiteSpace: "nowrap",
+            <div key={g.title} className="nav-group">
+              {gi > 0 && <span className="nav-sep">·</span>}
+              <select
+                className="nav-select"
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) navigate(e.target.value);
+                  e.target.value = "";
                 }}
+                aria-label={g.title}
               >
-                {g.title}
-              </span>
-              {g.items.map((n) => (
-                <NavLink
-                  key={n.to}
-                  to={n.to}
-                  className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
-                >
-                  {n.label}
-                </NavLink>
-              ))}
+                <option value="" disabled>{g.title}</option>
+                {g.items.map((n) => (
+                  <option key={n.to} value={n.to}>{n.label}</option>
+                ))}
+              </select>
             </div>
           ))}
         </nav>

@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuth } from "./auth/useAuth";
 import Layout from "./components/Layout";
+import Aprender from "./pages/Aprender";
 import Builder from "./pages/Builder";
 import Calculations from "./pages/Calculations";
 import Ensayos from "./pages/Ensayos";
@@ -180,6 +181,14 @@ export default function App() {
           element={
             <AcademicZone>
               <Retos />
+            </AcademicZone>
+          }
+        />
+        <Route
+          path="/aprender"
+          element={
+            <AcademicZone>
+              <Aprender />
             </AcademicZone>
           }
         />
