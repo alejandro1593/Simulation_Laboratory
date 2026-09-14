@@ -42,7 +42,7 @@ interface Estado {
 
 const GRID = ELEMENTS.filter((e) => e.g !== null);
 
-function hacePrompt(modo: Modo, rnd: () => number, ronda: number): Estado["prompt"] {
+function hacePrompt(modo: Modo, rnd: () => number, ronda: number): NonNullable<Estado["prompt"]> {
   if (modo === "encontrar") {
     const target = GRID[Math.floor(rnd() * GRID.length)];
     const tipos = [
@@ -68,7 +68,7 @@ function hacePrompt(modo: Modo, rnd: () => number, ronda: number): Estado["promp
   return { tipo: p.tipo, texto: p.texto, target };
 }
 
-function opcionesPara(prompt: Estado["prompt"], modo: Modo, rnd: () => number, target: ElementRow): ElementRow[] | null {
+function opcionesPara(prompt: Estado["prompt"], modo: Modo, rnd: () => number): ElementRow[] | null {
   if (modo === "encontrar") return null;
   if (!prompt) return null;
   const t = prompt.target;
@@ -120,15 +120,16 @@ const initialState = (modo: Modo): Estado => ({
 
 export default function PeriodicQuiz() {
   const [estado, setEstado] = useState<Estado>(initialState("encontrar"));
-  const [nuevo, setNuevo] = useState(0);
+  const [nuevo] = useState(0);
 
   const rnd = useMemo(() => mulberry32(estado.seed || Date.now()), [estado.seed, nuevo]);
 
   const empezar = (modo: Modo) => {
     const seed = (Date.now() ^ (Math.random() * 0xffffffff)) >>> 0;
     const st = { ...initialState(modo), seed, fase: "jugando" as const, ronda: 1 };
-    st.prompt = hacePrompt(modo, rnd, 1);
-    st.opciones = opcionesPara(st.prompt, modo, rnd, st.prompt.target);
+    const prompt = hacePrompt(modo, rnd, 1);
+    st.prompt = prompt;
+    st.opciones = opcionesPara(prompt, modo, rnd);
     setEstado(st);
   };
 
@@ -138,7 +139,6 @@ export default function PeriodicQuiz() {
       ? el?.z === estado.prompt?.target.z
       : el?.z === estado.prompt?.target.z;
     const racha = ok ? estado.racha + 1 : 0;
-    const fin = estado.ronda >= estado.totalRondas;
     setEstado((prev) => {
       const next: Estado = {
         ...prev,
@@ -167,7 +167,7 @@ export default function PeriodicQuiz() {
           ronda,
           resultado: null,
           prompt,
-          opciones: opcionesPara(prompt, prev.modo, rnd, prompt.target),
+          opciones: opcionesPara(prompt, prev.modo, rnd),
         };
       });
     }, 850);

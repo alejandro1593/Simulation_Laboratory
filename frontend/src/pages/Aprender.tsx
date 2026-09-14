@@ -17,6 +17,7 @@ const fmt = (n: number, d = 4) => {
 /* ------------------------------------------------------------------ */
 
 type MasaPart = { sym: string; count: number };
+type MasaPartRow = MasaPart & { name: string; mass: number; pct: number };
 
 function readNum(s: string, i: number): { value: number; consumed: number } {
   let j = i;
@@ -76,10 +77,10 @@ function parseFormula(src: string): { parts: MasaPart[]; error?: string } {
 
 function MasaMolar() {
   const [formula, setFormula] = useState("H2O");
-  const analysis = useMemo(() => {
+  const analysis = useMemo<{ error: string | undefined; parts: MasaPartRow[]; total: number }>(() => {
     const { parts, error } = parseFormula(formula);
-    if (error) return { error, parts: [] as MasaPart[], total: 0 };
-    if (parts.length === 0) return { error: undefined, parts: [] as MasaPart[], total: 0 };
+    if (error) return { error, parts: [], total: 0 };
+    if (parts.length === 0) return { error: undefined, parts: [], total: 0 };
     let total = 0;
     const rows = parts.map((p) => {
       const el = BY_SYM[p.sym] as { nE: string; m: number } | undefined;

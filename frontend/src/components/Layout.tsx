@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import { NAV_GROUPS, NavGroup } from "../data/nav";
 import CommandPalette from "./CommandPalette";
@@ -9,7 +9,6 @@ function DropdownMenu({ group, align }: { group: NavGroup; align: "left" | "righ
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
-  const navigate = useNavigate();
 
   const MENU_W = 272;
 

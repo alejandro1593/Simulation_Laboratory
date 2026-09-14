@@ -113,14 +113,6 @@ const match = (input: string, entry: Entry) => {
   return entry.aceptados.some((a) => norm(a) === v);
 };
 
-/* ── Subíndices unicode para display ──────────────────────────── */
-function sub(v: string) {
-  return v.replace(/(\d+)/g, (m) => {
-    const map: Record<string, string> = { "0": "₀", "1": "₁", "2": "₂", "3": "₃", "4": "₄", "5": "₅", "6": "₆", "7": "₇", "8": "₈", "9": "₉" };
-    return [...m].map((c) => map[c] ?? c).join("");
-  });
-}
-
 /* ── Componente ───────────────────────────────────────────────── */
 export default function NombraloInorg() {
   const [idx, setIdx] = useState(0);

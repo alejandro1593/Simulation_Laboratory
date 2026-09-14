@@ -700,11 +700,12 @@ export interface CompuestoInteres {
   uso: string;
   riesgo?: string;
   nota?: string;
+  smiles?: string;
 }
 
-// Compuestos de interés cotidiano: solo datos reales (fórmula, masa molar de
-// valores de referencia, fuente, uso). Ninguna estructura se inventa: por eso
-// no se dibujan SVG de moléculas complejas aquí.
+// Compuestos de interés cotidiano: datos reales (fórmula, masa molar de
+// valores de referencia, fuente, uso). El SMILES solo se incluye si está
+// verificado; si falta, no se dibuja estructura (regla: no inventar química).
 export const COMPUESTOS_INTERES: CompuestoInteres[] = [
   {
     id: "cafeina",
