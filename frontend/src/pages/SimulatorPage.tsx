@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, ApiError } from "../api/client";
 import SimBench, { SceneEvent } from "../components/SimBench";
+import CurvaAvance, { EvolutionData } from "../components/CurvaAvance";
+import PHmetro from "../components/pHimetro";
 
 interface Substance {
   key: string;
@@ -39,6 +41,7 @@ interface SimulationResult {
   explanation: string;
   safety: string;
   snapshot: string;
+  evolution?: EvolutionData | null;
 }
 
 interface AddItem {
@@ -307,6 +310,10 @@ export default function SimulatorPage() {
             })()}
           </div>
           <SimBench scene={result.scene} key={result.id} />
+          <div className="span-2 grid-2" style={{ alignItems: "stretch" }}>
+            {result.ph_estimate != null && <PHmetro ph={result.ph_estimate} />}
+            {result.evolution && <CurvaAvance data={result.evolution} />}
+          </div>
           <div className="span-2">
             <h3>Explicación</h3>
             <p>{result.explanation}</p>

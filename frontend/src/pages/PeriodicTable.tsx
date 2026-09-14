@@ -45,6 +45,21 @@ function esNoMetal(cat: Categoría) {
   return ES_TIPO[cat] === "No metal";
 }
 
+const NUM_BOUNDS = (() => {
+  const pick = (f: (e: ElementRow) => number | null): [number, number] => {
+    const vals = ELEMENTS.map(f).filter((v): v is number => v != null);
+    return [Math.min(...vals), Math.max(...vals)];
+  };
+  return {
+    masa: pick((e) => e.m),
+    electroneg: pick((e) => e.e),
+    fusion: pick((e) => e.mp),
+    densidad: pick((e) => e.den),
+  };
+})();
+
+type NumFilt = keyof typeof NUM_BOUNDS;
+
 function tableCol(e: ElementRow): number {
   if (e.g != null) return e.g;
   return 3 + (e.z - (e.p === 6 ? 57 : 89));
@@ -56,6 +71,20 @@ export default function PeriodicTable() {
   const [modo, setModo] = useState<Modo>("ninguna");
   const [sel, setSel] = useState<ElementRow | null>(null);
   const [tip, setTip] = useState<Tip | null>(null);
+  const [rngOn, setRngOn] = useState(false);
+  const [rango, setRango] = useState<Record<NumFilt, [number, number]>>({
+    masa: [...NUM_BOUNDS.masa],
+    electroneg: [...NUM_BOUNDS.electroneg],
+    fusion: [...NUM_BOUNDS.fusion],
+    densidad: [...NUM_BOUNDS.densidad],
+  });
+
+  const setRangoDe = (k: NumFilt, par: 0 | 1, v: number) =>
+    setRango((prev) => {
+      const cur = prev[k];
+      const next: [number, number] = par === 0 ? [Math.min(v, cur[1]), cur[1]] : [cur[0], Math.max(v, cur[0])];
+      return { ...prev, [k]: next };
+    });
 
   useEffect(() => {
     const onKey = (ev: KeyboardEvent) => {
@@ -85,6 +114,17 @@ export default function PeriodicTable() {
 
   const dim = (e: ElementRow) => {
     if (oculto(e)) return true;
+    if (rngOn) {
+      const activo = (k: NumFilt) => rango[k][0] > NUM_BOUNDS[k][0] || rango[k][1] < NUM_BOUNDS[k][1];
+      const [mlo, mhi] = rango.masa;
+      const [elo, ehi] = rango.electroneg;
+      const [flo, fhi] = rango.fusion;
+      const [dlo, dhi] = rango.densidad;
+      if (activo("masa") && (e.m < mlo || e.m > mhi)) return true;
+      if (activo("electroneg") && (e.e == null || e.e < elo || e.e > ehi)) return true;
+      if (activo("fusion") && (e.mp == null || e.mp < flo || e.mp > fhi)) return true;
+      if (activo("densidad") && (e.den == null || e.den < dlo || e.den > dhi)) return true;
+    }
     if (modo === "estado") return false;
     if (modo === "tipo") return false;
     if (modo === "electroneg") return e.e == null;
@@ -192,7 +232,69 @@ export default function PeriodicTable() {
             Limpiar filtros
           </button>
         )}
+        <button
+          className={rngOn ? "chip on" : "chip"}
+          onClick={() => setRngOn((v) => !v)}
+          aria-pressed={rngOn}
+        >
+          Filtros numéricos {rngOn ? "✓" : ""}
+        </button>
       </div>
+
+      {rngOn && (
+        <div className="panel numfilt" style={{ margin: "-4px 0 18px", padding: "12px 14px" }}>
+          {(
+            [
+              ["masa", "Masa atómica", "u", 0.1],
+              ["electroneg", "Electronegatividad", "", 0.01],
+              ["fusion", "Pto. de fusión", "°C", 1],
+              ["densidad", "Densidad", "g/cm³", 0.01],
+            ] as [NumFilt, string, string, number][]
+          ).map(([k, label, unidad, step]) => {
+            const [lo, hi] = rango[k];
+            return (
+              <div key={k} className="numfilt-row">
+                <span className="nf-label small">{label}</span>
+                <span className="nf-readout mono small">
+                  {k === "masa" || k === "fusion" ? lo.toFixed(0) : lo.toFixed(2)}–{k === "masa" || k === "fusion" ? hi.toFixed(0) : hi.toFixed(2)} {unidad}
+                </span>
+                <div className="nf-range">
+                  <input
+                    type="range"
+                    min={NUM_BOUNDS[k][0]}
+                    max={NUM_BOUNDS[k][1]}
+                    step={step}
+                    value={lo}
+                    onChange={(ev) => setRangoDe(k, 0, Number(ev.target.value))}
+                    aria-label={`Mínimo de ${label}`}
+                  />
+                  <input
+                    type="range"
+                    min={NUM_BOUNDS[k][0]}
+                    max={NUM_BOUNDS[k][1]}
+                    step={step}
+                    value={hi}
+                    onChange={(ev) => setRangoDe(k, 1, Number(ev.target.value))}
+                    aria-label={`Máximo de ${label}`}
+                  />
+                </div>
+              </div>
+            );
+          })}
+          <div className="numfilt-row" style={{ marginTop: 2 }}>
+            <span className="nf-label small muted visibles">{ELEMENTS.filter((e) => !dim(e)).length} de {ELEMENTS.length} elementos visibles</span>
+            <button
+              className="tiny"
+              onClick={() => {
+                setRango({ masa: [...NUM_BOUNDS.masa], electroneg: [...NUM_BOUNDS.electroneg], fusion: [...NUM_BOUNDS.fusion], densidad: [...NUM_BOUNDS.densidad] });
+                setRngOn(false);
+              }}
+            >
+              Quitar filtros numéricos
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="periodic-wrap panel">
         <div className="periodic">

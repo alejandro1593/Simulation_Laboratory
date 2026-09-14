@@ -150,6 +150,40 @@ def run_scene(additions: list[dict], equipment: str = "default") -> dict:
         mass_g = 1.0 * total_volume_ml  # agua ≈ 1 g/mL
         dT_c = round(q_j / (mass_g * WATER_CP_J_PER_G_K), 2)
 
+    # 8b) Curva de evolución determinista: moles de cada especie vs avance ξ.
+    #      Es la estequiometría exacta del kernel: ningún dato inventado.
+    reactant_init: dict[str, float] = {}
+    for k, f in key_formula.items():
+        reactant_init[f] = reactant_init.get(f, 0.0) + moles_in.get(k, 0.0)
+    evo_species: list[dict] = [
+        {"formula": f, "role": "reactivo", "coeff": c, "initial_mol": round(reactant_init.get(f, 0.0), 6)}
+        for f, c in rcoef.items()
+    ] + [
+        {"formula": f, "role": "producto", "coeff": c, "initial_mol": 0.0}
+        for f, c in pcoef.items()
+    ]
+    gas_coef = pcoef.get(gas, 0.0) if gas else 0.0
+    n_points = 24
+    evo_points: list[dict] = []
+    for i in range(n_points + 1):
+        xi = extent * i / n_points
+        moles = {
+            f: max(0.0, reactant_init.get(f, 0.0) - c * xi) for f, c in rcoef.items()
+        }
+        moles.update({f: max(0.0, c * xi) for f, c in pcoef.items()})
+        pt: dict = {"xi": round(xi, 6), "moles": {f: round(m, 6) for f, m in moles.items()}}
+        if gas:
+            pt["gas_volume_l"] = round(gas_coef * xi * GAS_MOLAR_VOLUME_L, 3)
+        if dH is not None and total_volume_ml:
+            pt["dT_c"] = round(-dH * xi * 1000.0 / (mass_g * WATER_CP_J_PER_G_K), 2)
+        evo_points.append(pt)
+    evolution = {
+        "x_label": "Grado de avance ξ (mol)",
+        "extent_mol": round(extent, 6),
+        "species": evo_species,
+        "points": evo_points,
+    }
+
     # 9) pH estimado (solo ácidos/bases fuertes)
     ph = None
     acid_keys = [a["substance"] for a in additions if catalog[a["substance"]].get("strong") == "acid"]
@@ -221,6 +255,7 @@ def run_scene(additions: list[dict], equipment: str = "default") -> dict:
             "products_mol": {f: round(m, 6) for f, m in product_moles.items()},
             "catalysts": [catalog[k]["nameEs"] for k in catalyst_keys],
         },
+        "evolution": evolution,
         "gas_volume_l": gas_volume_l,
         "temperature_delta_c": dT_c,
         "ph_estimate": ph,

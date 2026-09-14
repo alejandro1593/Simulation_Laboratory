@@ -803,6 +803,40 @@ label {
   max-width: 320px;
 }
 
+.numfilt {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.numfilt-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.numfilt-row .nf-label {
+  width: 170px;
+}
+
+.numfilt-row .nf-readout {
+  width: 120px;
+}
+
+.numfilt-row .nf-range {
+  flex: 1 1 220px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.numfilt-row .nf-range input[type="range"] {
+  flex: 1;
+  min-width: 90px;
+  accent-color: var(--accent);
+}
+
 /* ---------------- detalle elemento ---------------- */
 
 .modal-back {

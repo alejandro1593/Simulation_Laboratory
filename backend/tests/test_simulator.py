@@ -69,3 +69,33 @@ def test_unavailable_reaction_rejected():
 def test_deterministic():
     args = [{"substance": "hcl", "unit": "mL", "value": 50}, {"substance": "naoh", "unit": "mL", "value": 50}]
     assert simulator.run_scene(args) == simulator.run_scene(args)
+
+
+def test_evolution_curve_is_consistent_with_excess_limited_stoic():
+    res = simulator.run_scene(
+        [{"substance": "zn", "unit": "g", "value": 1.307}, {"substance": "hcl", "unit": "mL", "value": 400, "concentration": 1.0}]
+    )
+    evo = res["evolution"]
+    points = evo["points"]
+    assert len(points) == 25
+    assert points[0]["xi"] == 0.0
+    assert round(points[-1]["xi"], 6) == round(res["stoichiometry"]["extent_mol"], 6)
+
+    zn = next(s for s in evo["species"] if s["formula"] == "Zn")
+    h2 = next(s for s in evo["species"] if s["formula"] == "H2")
+    assert zn["role"] == "reactivo" and h2["role"] == "producto"
+
+    assert points[0]["moles"]["Zn"] == zn["initial_mol"]
+    assert points[-1]["moles"]["Zn"] <= 1e-9  # Zn es el limitante en este experimento
+    assert points[0]["moles"]["H2"] == 0.0
+    assert points[-1]["moles"]["H2"] == h2["coeff"] * res["stoichiometry"]["extent_mol"]
+
+    # volumen de gas estrictamente creciente y consistente con moles(H2) * molar
+    vols = [p["gas_volume_l"] for p in points]
+    assert vols == sorted(vols)
+    assert round(vols[-1], 3) == res["gas_volume_l"]
+
+
+def test_evolution_curve_is_deterministic():
+    args = [{"substance": "hcl", "unit": "mL", "value": 50}, {"substance": "naoh", "unit": "mL", "value": 50}]
+    assert simulator.run_scene(args)["evolution"] == simulator.run_scene(args)["evolution"]

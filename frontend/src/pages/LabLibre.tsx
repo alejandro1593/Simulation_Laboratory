@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "../api/client";
 import { SUBSTANCIAS, COMPAT, type Substancia, type CompatRule } from "../data/herramientas";
 import SimBench, { SceneEvent } from "../components/SimBench";
+import CurvaAvance, { EvolutionData } from "../components/CurvaAvance";
+import PHmetro from "../components/pHimetro";
 
 interface Catalog {
   substances: { key: string; nameEs: string; formula: string; state: string; molar_mass: number }[];
@@ -19,6 +21,24 @@ interface SimOut {
   temperature_delta_c: number | null;
   ph_estimate: number | null;
   snapshot: string;
+  evolution?: EvolutionData | null;
+}
+
+interface BitacoraEntry {
+  at: string;
+  a: string;
+  b: string;
+  amtA: string;
+  unitA: string;
+  amtB: string;
+  unitB: string;
+  tipo: "reaccion" | "peligro" | "inert" | "sin-reaccion";
+  titulo: string;
+  ecuacion?: string;
+  ph?: number | null;
+  gas?: number | null;
+  dT?: number | null;
+  nota: string;
 }
 
 function findRule(a: string, b: string): CompatRule | undefined {
@@ -40,6 +60,31 @@ export default function LabLibre() {
   const [res, setRes] = useState<SimOut | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [bitacora, setBitacora] = useState<BitacoraEntry[]>([]);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("mc_bitacora");
+      if (saved) setBitacora(JSON.parse(saved));
+    } catch {
+      /* bitácora no disponible */
+    }
+  }, []);
+
+  const registrar = useCallback(
+    (entry: BitacoraEntry) => {
+      setBitacora((prev) => {
+        const next = [entry, ...prev].slice(0, 60);
+        try {
+          localStorage.setItem("mc_bitacora", JSON.stringify(next));
+        } catch {
+          /* almacenamiento no disponible */
+        }
+        return next;
+      });
+    },
+    [],
+  );
 
   useEffect(() => {
     api<Catalog>("/academic/simulator/catalog")
@@ -56,10 +101,30 @@ export default function LabLibre() {
     setSinReaccion(false);
     setRes(null);
     setError("");
+    const base = (tipo: BitacoraEntry["tipo"], titulo: string, extra: Partial<BitacoraEntry> = {}) => {
+      registrar({
+        at: new Date().toISOString(),
+        a: aKey,
+        b: bKey,
+        amtA,
+        unitA,
+        amtB,
+        unitB,
+        tipo,
+        titulo,
+        nota: extra.nota ?? "",
+        ecuacion: extra.ecuacion,
+        ph: extra.ph ?? null,
+        gas: extra.gas ?? null,
+        dT: extra.dT ?? null,
+      });
+    };
     if (!r || r.tipo === "peligro" || r.tipo === "inert") {
+      const nota = r ? `${r.titulo}: ${r.detalle}` : "No se prevé una reacción balanceada conocida para esta mezcla (inert simulada).";
       if (r) setError(`${r.titulo}: ${r.detalle}`);
-      else setError("No se prevé una reacción balanceada conocida para esta mezcla (inert simulada).");
+      else setError(nota);
       if (!r) setSinReaccion(true);
+      base(r?.tipo === "peligro" ? "peligro" : r?.tipo === "inert" ? "inert" : "sin-reaccion", r?.titulo ?? "Sin reacción conocida", { nota });
       return;
     }
     setBusy(true);
@@ -76,9 +141,17 @@ export default function LabLibre() {
         authed: true,
       });
       setRes(out);
+      base("reaccion", out.title, {
+        ecuacion: out.equation_balanced,
+        ph: out.ph_estimate,
+        gas: out.gas_volume_l,
+        dT: out.temperature_delta_c,
+        nota: out.explanation,
+      });
     } catch (e) {
       setSinReaccion(true);
       setError(`Simulación estándar no disponible para este par (${r.titulo}: ${r.detalle}).`);
+      base("inert", r.titulo, { nota: r.detalle });
     } finally {
       setBusy(false);
     }
@@ -93,6 +166,53 @@ export default function LabLibre() {
     setBKey(k);
     const s = SUBSTANCIAS.find((x) => x.key === k);
     setUnitB(s?.state === "S" ? "g" : "mL");
+  }
+
+  const nombreDe = (k: string) => SUBSTANCIAS.find((s) => s.key === k)?.nameEs ?? k;
+
+  function exportarCSV() {
+    const esc = (v: string | number | null | undefined) => {
+      const s = v == null ? "" : String(v);
+      return /[";\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = [
+      "Fecha", "Sustancia A", "Cant. A", "Unidad A", "Sustancia B", "Cant. B", "Unidad B",
+      "Tipo", "Título / Ecuación", "pH", "Gas (L)", "ΔT (°C)", "Nota",
+    ].map(esc).join(";");
+    const rows = bitacora.map((b) =>
+      [
+        new Date(b.at).toLocaleString("es"),
+        nombreDe(b.a),
+        b.amtA,
+        b.unitA,
+        nombreDe(b.b),
+        b.amtB,
+        b.unitB,
+        b.tipo,
+        b.ecuacion ?? b.titulo,
+        b.ph != null ? String(b.ph) : "",
+        b.gas != null ? String(b.gas) : "",
+        b.dT != null ? String(b.dT) : "",
+        b.nota,
+      ].map(esc).join(";"),
+    );
+    const csv = "\uFEFF" + [header, ...rows].join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "bitacora-molcore.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function vaciarBitacora() {
+    setBitacora([]);
+    try {
+      localStorage.removeItem("mc_bitacora");
+    } catch {
+      /* no requerido */
+    }
   }
 
   return (
@@ -178,6 +298,10 @@ export default function LabLibre() {
             <p className="muted">{res.safety}</p>
           </div>
           <SimBench scene={res.scene} key={res.id} />
+          <div className="span-2 grid-2" style={{ alignItems: "stretch" }}>
+            {res.ph_estimate != null && <PHmetro ph={res.ph_estimate} />}
+            {res.evolution && <CurvaAvance data={res.evolution} />}
+          </div>
         </div>
       )}
 
@@ -190,6 +314,51 @@ export default function LabLibre() {
           </p>
         </div>
       )}
+
+      <div className="card" style={{ marginTop: 14 }}>
+        <h2 style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+          <span>Bitácora de laboratorio</span>
+          <span style={{ display: "flex", gap: 8 }}>
+            <button className="ghost tiny" onClick={exportarCSV} disabled={!bitacora.length} aria-label="Exportar bitácora a CSV">
+              ⬇ Exportar CSV (.csv)
+            </button>
+            <button className="ghost tiny" onClick={vaciarBitacora} disabled={!bitacora.length}>
+              Vaciar
+            </button>
+          </span>
+        </h2>
+        {bitacora.length === 0 ? (
+          <p className="muted" style={{ marginTop: 4 }}>
+            Aún no has anotado mezclas en este navegador. Cada mezcla que ejecutes (o descartes por peligro) se registra aquí.
+          </p>
+        ) : (
+          <>
+            <table className="table">
+              <tbody>
+                {bitacora.map((b, i) => (
+                  <tr key={i}>
+                    <td className="muted small" style={{ whiteSpace: "nowrap" }}>
+                      {new Date(b.at).toLocaleString("es")}
+                    </td>
+                    <td className="small">
+                      {nombreDe(b.a)} + {nombreDe(b.b)}
+                    </td>
+                    <td>
+                      <span className={`chip ${b.tipo === "reaccion" ? "ok" : b.tipo === "peligro" ? "bad" : ""}`} style={{ fontSize: 11 }}>
+                        {b.tipo === "reaccion" ? "reacción" : b.tipo === "peligro" ? "peligro" : b.tipo === "inert" ? "inert" : "sin reacción"}
+                      </span>
+                    </td>
+                    <td className="small">{b.ecuacion ?? b.titulo}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="muted small" style={{ marginTop: 6 }}>
+              {bitacora.length} registro{bitacora.length === 1 ? "" : "s"} · 60 máx
+            </p>
+          </>
+        )}
+      </div>
 
       <div className="card" style={{ marginTop: 14 }}>
         <h2>Normas generales</h2>
