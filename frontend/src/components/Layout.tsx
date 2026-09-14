@@ -105,15 +105,7 @@ function DropdownMenu({ group, align }: { group: NavGroup; align: "left" | "righ
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const [cmdOpen, setCmdOpen] = useState(false);
-  const [theme, setTheme] = useState<"dark" | "light">(() =>
-    localStorage.getItem("mc_theme") === "light" ? "light" : "dark",
-  );
   const { hash } = useLocation();
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem("mc_theme", theme);
-  }, [theme]);
 
   useEffect(() => {
     if (!hash) return;
@@ -155,7 +147,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <nav className="nav">
           <button className="nav-trigger search-trigger" onClick={() => setCmdOpen(true)}>
             <span className="nav-trigger-ico">🔎</span>
-            <span className="nav-trigger-label muted small">⌘K</span>
+            <span className="nav-trigger-label">Buscar</span>
           </button>
 
           <NavLink
@@ -174,15 +166,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <div className="account">
-          <button
-            className="nav-trigger theme-toggle"
-            onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
-            title={theme === "dark" ? "Cambiar a tema claro" : "Cambiar a tema oscuro"}
-            aria-label="Cambiar tema"
-          >
-            <span className="nav-trigger-ico">{theme === "dark" ? "☀️" : "🌙"}</span>
-            <span className="nav-trigger-label small muted">{theme === "dark" ? "Claro" : "Oscuro"}</span>
-          </button>
+          {user && (
+            <span className="muted small chip-inline">{user.username}</span>
+          )}
           {user ? (
             <>
               <span className="zone-tag">{user.zone}</span>

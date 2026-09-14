@@ -11,6 +11,7 @@ import {
 import SkeletalFormula from "../components/SkeletalFormula";
 import GhsPictos from "../components/GhsPictos";
 import Mol3D from "../components/Mol3D";
+import Formula2D from "../components/Formula2D";
 
 export default function OrganicCatalog() {
   const [q, setQ] = useState("");
@@ -252,9 +253,9 @@ export default function OrganicCatalog() {
       <hr className="hair-sep" />
       <h2>Compuestos de interés cotidiano</h2>
       <p className="lead" style={{ marginBottom: 12 }}>
-        Fórmulas, masas molares reales y roles de moléculas que encontramos cada día.
-        Solo se incluyen datos verificados; estructura honoraria: no se dibuja nada que
-        no pueda representarse con conectividad correcta.
+        Fórmulas, masas molares reales, estructura esqueletal 2D y modelo 3D de moléculas que
+        encontramos cada día. La estructura se dibuja solo a partir de conectividad verificada
+        (SMILES curado); los carbonos quedan implícitos como en la notación esqueletal.
       </p>
 
       {compuestos.length === 0 ? (
@@ -290,6 +291,15 @@ export default function OrganicCatalog() {
               <p className="mono small" style={{ margin: "10px 0 0" }}>
                 M ≈ {c.masa} g/mol · {c.gf}
               </p>
+              {c.smiles ? (
+                <div className="molbox" style={{ margin: "10px 0 0" }}>
+                  <Formula2D smiles={c.smiles} width={280} height={150} />
+                </div>
+              ) : (
+                <p className="captions" style={{ margin: "10px 0 0" }}>
+                  Estructura esqueletal no disponible: conectividad no verificada para dibujo 2D.
+                </p>
+              )}
               <div className="small" style={{ display: "grid", gap: 8, marginTop: 10 }}>
                 <div>
                   <span className="hint-col" style={{ display: "block" }}>Fuente</span>
@@ -439,7 +449,18 @@ export default function OrganicCatalog() {
                 <button className="tiny" onClick={close}>Cerrar ✕</button>
               </div>
               <p className="muted small">{c.iupac}</p>
-              {c.smiles && <Mol3D smiles={c.smiles} width={360} height={240} header={`Modelo 3D · ${c.nombre}`} />}
+              {c.smiles ? (
+                <>
+                  <div className="molbox molbox--big" style={{ margin: "10px 0", padding: 10 }}>
+                    <Formula2D smiles={c.smiles} width={360} height={200} />
+                  </div>
+                  <Mol3D smiles={c.smiles} width={360} height={220} header={`Modelo 3D · ${c.nombre}`} />
+                </>
+              ) : (
+                <p className="notice" style={{ marginTop: 10 }}>
+                  Estructura no dibujada: no hay conectividad verificada para este compuesto.
+                </p>
+              )}
               <div style={{ display: "grid", gap: 10, marginTop: 14 }}>
                 <div>
                   <span className="hint-col" style={{ display: "block" }}>Masa molar</span>

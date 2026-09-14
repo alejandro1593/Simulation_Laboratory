@@ -179,8 +179,8 @@ export default function SimulatorPage() {
         verifica en el backend antes de renderizar la animación.
       </p>
 
-      <div className="grid-2">
-        <div className="card">
+      <div className="grid-2" style={{ gridTemplateColumns: "1fr 2fr", alignItems: "start" }}>
+        <div className="card" style={{ height: "auto" }}>
           <h2>Catálogo</h2>
           <select value={selected} onChange={(e) => pickExp(Number(e.target.value))} aria-label="Experimento del catálogo" style={{ width: "100%", padding: "8px 10px" }}>
             {experiments.map((e, i) => (

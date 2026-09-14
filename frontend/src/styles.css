@@ -27,40 +27,6 @@
   --grid-line: rgba(170, 150, 255, 0.05);
 }
 
-/* ============================================================
-   Tema claro · MolCore Lab
-   Se activa con <html data-theme="light"> (configurable).
-   ============================================================ */
-:root[data-theme="light"] {
-  --bg: #f4f6ff;
-  --bg-2: #eef0fb;
-  --panel: #ffffff;
-  --panel-2: #f3f5fd;
-  --raised: #e6e8f5;
-  --hair: rgba(60, 70, 130, 0.16);
-  --hair-soft: rgba(60, 70, 130, 0.08);
-  --txt: #151a33;
-  --muted: #4b5478;
-  --faint: #7c86a8;
-  --accent: #0a9e7e;
-  --accent-2: #3b6df0;
-  --warn: #c46a00;
-  --danger: #d64545;
-  --ok: #0a9e7e;
-  --shadow: 0 14px 40px rgba(30, 35, 90, 0.16);
-  --grid-line: rgba(40, 60, 140, 0.06);
-}
-
-:root[data-theme="light"] body {
-  background:
-    radial-gradient(1300px 620px at 8% -12%, rgba(130, 160, 255, 0.22), transparent 55%),
-    radial-gradient(1300px 620px at 92% -12%, rgba(120, 220, 255, 0.2), transparent 55%),
-    radial-gradient(1100px 620px at 2% 106%, rgba(255, 190, 110, 0.16), transparent 58%),
-    radial-gradient(1100px 620px at 98% 106%, rgba(110, 225, 180, 0.16), transparent 58%),
-    linear-gradient(160deg, rgba(120, 150, 250, 0.06), rgba(120, 200, 235, 0.06) 45%, rgba(230, 150, 220, 0.06)),
-    var(--bg);
-}
-
 * {
   box-sizing: border-box;
 }
@@ -2014,9 +1980,6 @@ canvas.builder-canvas {
 }
 
 /* ── COMMAND PALETTE ──────────────────────────────────────────── */
-.search-trigger {
-  padding: 0 10px;
-}
 
 .cmd-overlay {
   position: fixed;
