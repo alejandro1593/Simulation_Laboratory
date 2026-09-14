@@ -716,6 +716,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Café, té, cacao y mate",
     uso: "Estimulante del sistema nervioso central en bebidas y fármacos",
     riesgo: "Dosis altas: ansiedad, insomnio y taquicardia",
+    smiles: "CN1C=NC2=C1C(=O)N(C(=O)N2C)C",
   },
   {
     id: "aspirina",
@@ -727,6 +728,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Derivada de la salicina del sauce; sintetizada a gran escala",
     uso: "Analgésico, antipirético y antiinflamatorio",
     riesgo: "Contraindicado en algunos trastornos de coagulación",
+    smiles: "CC(=O)OC1=CC=CC=C1C(=O)O",
   },
   {
     id: "paracetamol",
@@ -738,6 +740,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Síntesis farmacéutica",
     uso: "Analgésico y antipirético",
     riesgo: "Hepatotóxico en sobredosis",
+    smiles: "CC(=O)NC1=CC=C(C=C1)O",
   },
   {
     id: "ibuprofeno",
@@ -749,6 +752,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Síntesis farmacéutica",
     uso: "Antiinflamatorio no esteroideo (AINE)",
     riesgo: "Puede irritar el estómago a dosis altas",
+    smiles: "CC(C)CC1=CC=C(C=C1)C(C)C(=O)O",
   },
   {
     id: "nicotina",
@@ -761,6 +765,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     uso: "Es el alcaloide que dota al tabaco de su efecto estimulante",
     riesgo: "Altamente adictiva; no consumir. No es una sustancia inofensiva",
     nota: "Se estudia por su química; su consumo está asociado a graves problemas de salud.",
+    smiles: "CN1CCCC1C1=CC=CN=C1",
   },
   {
     id: "thc",
@@ -797,6 +802,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Aldehído; polialcohol (aldosa)",
     fuente: "Frutas, miel y sangre (combustible celular)",
     uso: "Principal azúcar que usan las células para obtener energía",
+    smiles: "OCC1OC(O)C(O)C(O)C1O",
   },
   {
     id: "fructosa",
@@ -829,6 +835,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Fermentación de azúcares por levaduras",
     uso: "Bebidas alcohólicas, desinfectante, combustible (bioetanol)",
     riesgo: "Consumo excesivo tóxico; inflamable",
+    smiles: "CCO",
   },
   {
     id: "metanol",
@@ -840,6 +847,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Destilación de madera e industria",
     uso: "Disolvente y precursor químico",
     riesgo: "MUY tóxico: puede causar ceguera; jamás ingerir",
+    smiles: "CO",
   },
   {
     id: "acido-citrico",
@@ -850,6 +858,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "3 ácidos carboxílicos + 1 alcohol",
     fuente: "Cítricos (limón, naranja) y metabolismo celular",
     uso: "Acidulante en alimentos y ciclo de Krebs",
+    smiles: "OC(CC(=O)O)(CC(=O)O)C(=O)O",
   },
   {
     id: "limoneno",
@@ -860,6 +869,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Alqueno cíclico (terpeno)",
     fuente: "Cáscara de cítricos",
     uso: "Aroma característico del limón; disolvente verde",
+    smiles: "CC1=CCC(CC1)C(=C)C",
   },
   {
     id: "mentol",
@@ -870,6 +880,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Alcohol terpénico",
     fuente: "Menta",
     uso: "Sensación de frescor; productos bucales y ungüentos",
+    smiles: "CC(C)C1CCC(C)CC1O",
   },
   {
     id: "eucaliptol",
@@ -890,6 +901,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Aldehído + fenol + éter",
     fuente: "Vaina de vainilla (y síntesis industrial)",
     uso: "El aroma principal de la vainilla",
+    smiles: "COc1cc(C=O)ccc1O",
   },
   {
     id: "cinamaldehido",
@@ -900,6 +912,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Aldehído + alqueno conjugado al anillo",
     fuente: "Canela",
     uso: "El aroma característico de la canela",
+    smiles: "O=CC=CC1=CC=CC=C1",
   },
   {
     id: "acido-salicilico",
@@ -910,6 +923,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Ácido carboxílico + fenol",
     fuente: "Corteza de sauce",
     uso: "Precursor de la aspirina; queratolítico en cosmética",
+    smiles: "OC(=O)C1=CC=CC=C1O",
   },
   {
     id: "vitamina-c",
@@ -920,6 +934,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Lactona + diol; γ-lactona",
     fuente: "Frutas y verduras frescas",
     uso: "Antioxidante; previene el escorbuto",
+    smiles: "OC[C@@H](O)[C@H]1OC(=O)C(O)=C1O",
   },
   {
     id: "colesterol",
@@ -931,6 +946,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Sintetizado por el hígado y en alimentos animales",
     uso: "Componente esencial de membranas; precursor de hormonas",
     nota: "Estructura grande (27 C) con 4 anillos fusionados: cuádruple anillo del ciclopentanoperhidrofenantreno.",
+    smiles: "CC(C)C(C)CCC(C)C1CCC2C3CC=C4CC(O)CCC4(C)C3CCC12C",
   },
   {
     id: "clorofila-a",
@@ -954,6 +970,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Combustión incompleta; síntesis industrial",
     uso: "Preservantes, resinas y desinfectantes",
     riesgo: "Tóxico e irritante; vapores peligrosos. Nunca en espacios cerrados",
+    smiles: "C=O",
   },
   {
     id: "acetona",
@@ -965,6 +982,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Síntesis industrial (proceso del cumeno)",
     uso: "Disolvente de uso cotidiano (quitaesmalte, limpieza)",
     riesgo: "Inflamable; vapores irritantes",
+    smiles: "CC(=O)C",
   },
   {
     id: "glicerol",
@@ -976,6 +994,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Hidrólisis de grasas y aceites",
     uso: "Humectante en cosmética y alimentos; precursor de la nitroglicerina",
     nota: "Sus tres grupos –OH la hacen excelente humectante.",
+    smiles: "OCC(O)CO",
   },
   {
     id: "urea",
@@ -987,6 +1006,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Metabolismo de proteínas; síntesis de Wöhler (1828)",
     uso: "Fertilizante nitrogenado y materia prima química",
     nota: "Primer compuesto orgánico obtenido en laboratorio a partir de un precursor inorgánico.",
+    smiles: "NC(=O)N",
   },
   {
     id: "tolueno",
@@ -998,6 +1018,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Petróleo (reformado catalítico)",
     uso: "Disolvente y precursor (TNT, ácido benzoico)",
     riesgo: "Tóxico por inhalación; inflamable",
+    smiles: "CC1=CC=CC=C1",
   },
   {
     id: "anilina",
@@ -1009,6 +1030,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Síntesis industrial (nitrobenceno + H₂)",
     uso: "Tintes, polímeros (MDI) y farmacia",
     riesgo: "Tóxica; sospecha de carcinogenicidad",
+    smiles: "NC1=CC=CC=C1",
   },
   {
     id: "naftaleno",
@@ -1021,6 +1043,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     uso: "Clásicas «bolas antipelillas»; química de colorantes",
     riesgo: "Nocivo por inhalación; posible carcinógeno",
     nota: "Dos anillos bencénicos fusionados; su olor pungente es inconfundible.",
+    smiles: "C1=CC2=CC=CC=C2C=C1",
   },
   {
     id: "acido-lactico",
@@ -1031,6 +1054,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Ácido carboxílico + alcohol (α-hidroxiácido)",
     fuente: "Músculo (fermentación láctica) y bacterias lácticas",
     uso: "Alimentos, cosmética (AHA) y bioplásticos (PLA)",
+    smiles: "CC(O)C(=O)O",
   },
   {
     id: "butirato-de-etilo",
@@ -1042,6 +1066,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     fuente: "Esterificación de etanol + ácido butírico",
     uso: "Aroma artificial de piña",
     nota: "Los ésteres de ácidos carboxílicos producen muchos aromas frutales.",
+    smiles: "CCCC(=O)OCC",
   },
   {
     id: "adrenalina",
@@ -1052,6 +1077,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Catecolamina (fenol + alcohol + amina)",
     fuente: "Glándulas suprarrenales",
     uso: "Hormona de «lucha o huida»; fármaco de emergencia",
+    smiles: "CNC[C@H](O)c1cc(O)c(O)cc1",
   },
   {
     id: "serotonina",
@@ -1062,6 +1088,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Triptamina (indol + amina + fenol)",
     fuente: "Células del intestino y cerebro",
     uso: "Neurotransmisor que regula ánimo, sueño y apetito",
+    smiles: "NCCC1=CNC2=CC=C(O)C=C12",
   },
   {
     id: "acido-butirico",
@@ -1072,6 +1099,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Ácido carboxílico",
     fuente: "Fermentación de la mantequilla ranciosa",
     uso: "Olor penetrante; precursor de ésteres frutales",
+    smiles: "CCCC(=O)O",
   },
   {
     id: "alcanfor",
@@ -1082,6 +1110,7 @@ export const COMPUESTOS_INTERES: CompuestoInteres[] = [
     gf: "Cetona terpénica (bicíclica)",
     fuente: "Canforero (Cinnamomum camphora) y síntesis",
     uso: "Ungüentos, repelentes y fragancias",
+    smiles: "CC1(C)C2CCC1(C)C(=O)C2",
   },
 ];
 

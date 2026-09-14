@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { api } from "../api/client";
+import { BY_SYM } from "../data/elements";
 
 /* ------------------------------------------------------------------ */
 /*  Tiny helpers                                                       */
@@ -14,6 +15,123 @@ const fmt = (n: number, d = 4) => {
 /* ------------------------------------------------------------------ */
 /*  CALCULATORS (pure client-side)                                     */
 /* ------------------------------------------------------------------ */
+
+type MasaPart = { sym: string; count: number };
+
+function readNum(s: string, i: number): { value: number; consumed: number } {
+  let j = i;
+  while (j < s.length && /[0-9]/.test(s[j])) j += 1;
+  const num = s.slice(i, j);
+  return { value: num ? parseInt(num, 10) : 1, consumed: j - i };
+}
+
+function parseFormula(src: string): { parts: MasaPart[]; error?: string } {
+  const unicode = "₀₁₂₃₄₅₆₇₈₉";
+  const s = src
+    .replace(/\s+/g, "")
+    .split("")
+    .map((ch) => {
+      const idx = unicode.indexOf(ch);
+      return idx >= 0 ? String(idx) : ch;
+    })
+    .join("");
+  if (!s) return { parts: [] };
+  if (!/^[A-Za-z0-9()]+$/.test(s)) return { parts: [], error: "Caracteres no válidos: usa símbolos, números y paréntesis." };
+
+  const groups: MasaPart[][] = [[]];
+  const into = () => groups[groups.length - 1];
+  let i = 0;
+  while (i < s.length) {
+    const ch = s[i];
+    if (ch === "(") {
+      groups.push([]);
+      i += 1;
+    } else if (ch === ")") {
+      if (groups.length === 1) return { parts: [], error: "Paréntesis de cierre sin apertura." };
+      const group = groups.pop() as MasaPart[];
+      const { value, consumed } = readNum(s, i + 1);
+      for (const p of group) into().push({ sym: p.sym, count: p.count * value });
+      i += 1 + consumed;
+    } else if (/[A-Z]/.test(ch)) {
+      let sym = ch;
+      i += 1;
+      if (i < s.length && /[a-z]/.test(s[i])) {
+        sym += s[i];
+        i += 1;
+      }
+      if (!BY_SYM[sym]) return { parts: [], error: `Elemento desconocido: ${sym}.` };
+      const { value, consumed } = readNum(s, i);
+      into().push({ sym, count: value });
+      i += consumed;
+    } else {
+      return { parts: [], error: `Carácter inesperado: "${ch}".` };
+    }
+  }
+  if (groups.length !== 1) return { parts: [], error: "Paréntesis sin cerrar." };
+
+  const merged = new Map<string, number>();
+  for (const p of groups[0]) merged.set(p.sym, (merged.get(p.sym) ?? 0) + p.count);
+  return { parts: [...merged.entries()].map(([sym, count]) => ({ sym, count })) };
+}
+
+function MasaMolar() {
+  const [formula, setFormula] = useState("H2O");
+  const analysis = useMemo(() => {
+    const { parts, error } = parseFormula(formula);
+    if (error) return { error, parts: [] as MasaPart[], total: 0 };
+    if (parts.length === 0) return { error: undefined, parts: [] as MasaPart[], total: 0 };
+    let total = 0;
+    const rows = parts.map((p) => {
+      const el = BY_SYM[p.sym] as { nE: string; m: number } | undefined;
+      const mass = (el?.m ?? 0) * p.count;
+      total += mass;
+      return { ...p, name: el?.nE ?? p.sym, mass, pct: mass };
+    });
+    return { error: undefined, parts: rows, total };
+  }, [formula]);
+
+  return (
+    <div className="calc-grid">
+      <p className="calc-hint muted small">
+        Escribe una fórmula: <code>Ca(OH)₂</code>, <code>(NH4)2SO4</code>, <code>C6H12O6</code>. Acepta subíndices unicode y paréntesis.
+      </p>
+      <div className="calc-row">
+        <label>Fórmula
+          <input
+            type="text"
+            value={formula}
+            onChange={(e) => setFormula(e.target.value)}
+            placeholder="H2O"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
+          />
+        </label>
+        <div className="calc-result">
+          {analysis.error && <span className="bad-chip">{analysis.error}</span>}
+          {!analysis.error && analysis.total > 0 && (
+            <>
+              <span className="calc-val">{fmt(analysis.total, 4)}</span>
+              <span className="calc-unit">g/mol</span>
+            </>
+          )}
+        </div>
+      </div>
+      {!analysis.error && analysis.parts.length > 0 && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, marginTop: 6, fontSize: 13 }}>
+          {analysis.parts.map((p) => (
+            <div key={p.sym} className="calc-result" style={{ justifyContent: "start", gap: 4 }}>
+              <span className="calc-formula mono">{p.sym}<sub>{p.count > 1 ? p.count : ""}</sub></span>
+              <span className="muted small">{p.name}</span>
+              <span className="calc-formula">{fmt(p.mass, 3)} g · {fmt((p.mass / analysis.total) * 100, 1)}%</span>
+            </div>
+          ))}
+        </div>
+      )}
+      <p className="calc-formula muted small" style={{ marginTop: 10 }}>M = Σ masa atómica × nº átomos · desglose en g/mol (IUPAC/CRC)</p>
+    </div>
+  );
+}
 
 function MolesGramos() {
   const [mass, setMass] = useState("");
@@ -738,6 +856,7 @@ const TOPICS: Topic[] = [
 
 const CALCULATORS = [
   { id: "mol-gram", title: "Moles ↔ Gramos", desc: "Convierte entre moles y gramos usando la masa molar", Comp: MolesGramos },
+  { id: "masa-molar", title: "Masa molar de una fórmula", desc: "Desglosa cualquier fórmula en sus elementos y calcula su masa molar", Comp: MasaMolar },
   { id: "molaridad", title: "Molaridad (C = n/V)", desc: "Calcula la concentración molar de una solución", Comp: MolaridadCalc },
   { id: "diluciones", title: "Diluciones (C₁V₁ = C₂V₂)", desc: "Resuelve problemas de dilución de soluciones", Comp: DilucionCalc },
   { id: "gas-ideal", title: "Gas Ideal (PV = nRT)", desc: "Calcula presión, volumen, moles o temperatura", Comp: GasIdealCalc },

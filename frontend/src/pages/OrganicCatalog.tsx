@@ -10,6 +10,7 @@ import {
 } from "../data/organic";
 import SkeletalFormula from "../components/SkeletalFormula";
 import GhsPictos from "../components/GhsPictos";
+import Mol3D from "../components/Mol3D";
 
 export default function OrganicCatalog() {
   const [q, setQ] = useState("");
@@ -438,6 +439,7 @@ export default function OrganicCatalog() {
                 <button className="tiny" onClick={close}>Cerrar ✕</button>
               </div>
               <p className="muted small">{c.iupac}</p>
+              {c.smiles && <Mol3D smiles={c.smiles} width={360} height={240} header={`Modelo 3D · ${c.nombre}`} />}
               <div style={{ display: "grid", gap: 10, marginTop: 14 }}>
                 <div>
                   <span className="hint-col" style={{ display: "block" }}>Masa molar</span>
