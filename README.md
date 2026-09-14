@@ -12,6 +12,8 @@ monolito modulado en dos capas:
 Proyecto desplegado en **Render** (web + API, blueprint `render.yaml`) con base
 de datos **PostgreSQL en Neon** (free tier persistente).
 
+**URL en producción:** https://molcore-web.onrender.com
+
 ## Regla del proyecto
 
 > **No se inventa química.** Todos los datos (elementos, experimentos, masas
