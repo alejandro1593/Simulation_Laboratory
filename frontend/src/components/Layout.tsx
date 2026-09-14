@@ -62,9 +62,12 @@ const groups: NavGroup[] = [
 
 function DropdownMenu({ group, align }: { group: NavGroup; align: "left" | "right" }) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+
+  const MENU_W = 272;
 
   useEffect(() => {
     if (!open) return;
@@ -82,6 +85,34 @@ function DropdownMenu({ group, align }: { group: NavGroup; align: "left" | "righ
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    const recompute = () => {
+      const r = ref.current?.getBoundingClientRect();
+      if (!r) return;
+      const left = align === "right"
+        ? Math.max(8, Math.min(r.right - MENU_W, window.innerWidth - MENU_W - 8))
+        : Math.max(8, Math.min(r.left, window.innerWidth - MENU_W - 8));
+      setPos({ top: r.bottom + 10, left });
+    };
+    window.addEventListener("resize", recompute);
+    return () => window.removeEventListener("resize", recompute);
+  }, [open, align]);
+
+  const toggle = () => {
+    if (open) {
+      setOpen(false);
+      return;
+    }
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    const left = align === "right"
+      ? Math.max(8, Math.min(r.right - MENU_W, window.innerWidth - MENU_W - 8))
+      : Math.max(8, Math.min(r.left, window.innerWidth - MENU_W - 8));
+    setPos({ top: r.bottom + 10, left });
+    setOpen(true);
+  };
+
   const active = group.items.find((i) => i.to.split("#")[0] === pathname);
   const triggerLabel = active ? active.label : group.title;
   const triggerIcon = active ? active.icon : "";
@@ -90,7 +121,7 @@ function DropdownMenu({ group, align }: { group: NavGroup; align: "left" | "righ
     <div className={`nav-dropdown ${align === "right" ? "align-right" : ""}`} ref={ref}>
       <button
         className={`nav-trigger ${active ? "active" : ""}`}
-        onClick={() => setOpen((o) => !o)}
+        onClick={toggle}
         aria-expanded={open}
         aria-haspopup="menu"
       >
@@ -98,8 +129,8 @@ function DropdownMenu({ group, align }: { group: NavGroup; align: "left" | "righ
         <span className="nav-trigger-label">{triggerLabel}</span>
         <span className={`chevron ${open ? "open" : ""}`}>▾</span>
       </button>
-      {open && (
-        <div className="dropdown-menu" role="menu">
+      {open && pos && (
+        <div className="dropdown-menu" role="menu" style={{ top: pos.top, left: pos.left }}>
           {group.items.map((n) => {
             const isActive = n.to.split("#")[0] === pathname;
             return (

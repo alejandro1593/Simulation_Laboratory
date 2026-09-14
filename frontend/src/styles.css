@@ -193,15 +193,8 @@ body {
   position: relative;
 }
 
-.nav-dropdown.align-right .dropdown-menu {
-  left: auto;
-  right: 0;
-}
-
 .dropdown-menu {
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 0;
+  position: fixed;
   min-width: 258px;
   padding: 6px;
   background: rgba(13, 16, 38, 0.92);
