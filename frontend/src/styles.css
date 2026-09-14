@@ -1166,11 +1166,107 @@ canvas.builder-canvas {
 .molbox {
   display: grid;
   place-items: center;
-  padding: 8px;
-  border-radius: 10px;
-  background: rgba(5, 10, 18, 0.4);
-  border: 1px solid var(--hair-soft);
+  padding: 10px 12px;
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(64, 90, 140, 0.10), transparent 70%),
+    linear-gradient(180deg, rgba(13, 20, 33, 0.9), rgba(6, 11, 20, 0.9));
+  border: 1px solid var(--hair);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 10px 24px rgba(0, 0, 0, 0.35);
   margin: 10px 0;
+}
+
+.molbox--big {
+  padding: 16px 14px;
+}
+
+.qcard {
+  border: 1px solid var(--hair);
+  border-radius: 16px;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, rgba(22, 31, 48, 0.9), rgba(14, 21, 34, 0.9));
+  display: grid;
+  gap: 4px;
+}
+
+.qstats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.qstats .chip {
+  font-size: 12px;
+}
+
+.qstats .skip {
+  flex: 1;
+}
+
+.okchip {
+  border-color: rgba(90, 220, 150, 0.35) !important;
+  color: #86dbae !important;
+}
+
+.badchip {
+  border-color: rgba(255, 120, 90, 0.35) !important;
+  color: #ffb89e !important;
+}
+
+.racha {
+  border-color: rgba(92, 232, 192, 0.35) !important;
+  color: var(--accent) !important;
+}
+
+.qbar {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  margin: 6px 0 2px;
+}
+
+.qbar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), #35d4a8);
+  transition: width 0.25s ease;
+}
+
+.qform {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.qres {
+  margin-top: 12px;
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--hair-soft);
+}
+
+.qres.ok {
+  border-color: rgba(90, 220, 150, 0.4);
+  background: rgba(60, 200, 130, 0.08);
+}
+
+.qres.bad {
+  border-color: rgba(255, 120, 90, 0.4);
+  background: rgba(255, 90, 60, 0.07);
+}
+
+.qdet {
+  list-style: decimal;
+  display: grid;
+  gap: 6px;
+  padding-left: 18px;
 }
 
 .serie-table td {

@@ -7,7 +7,7 @@ import {
   PRIORIDADES_GRUPOS,
   SERIES_HOMOLOGAS,
 } from "../data/organic";
-import MoleculeSVG from "../components/MoleculeSVG";
+import SkeletalFormula from "../components/SkeletalFormula";
 
 export default function OrganicCatalog() {
   const [q, setQ] = useState("");
@@ -87,8 +87,8 @@ export default function OrganicCatalog() {
               {g.nombre} <span className="gf-tag">{g.formula}</span>
             </h3>
             <p className="small muted" style={{ margin: "4px 0 0" }}>{g.grupo}</p>
-            <div className="molbox" style={{ margin: "12px 0 0" }}>
-              <MoleculeSVG mol={g.ejemplos[0].mol} />
+            <div className="molbox molbox--big" style={{ margin: "12px 0 0" }}>
+              <SkeletalFormula mol={g.ejemplos[0].mol} width={300} height={170} />
             </div>
             <div className="small" style={{ display: "grid", gap: 10, marginTop: 12 }}>
               <div>
@@ -250,8 +250,8 @@ export default function OrganicCatalog() {
                   </div>
                 )}
 
-                <div className="molbox" style={{ margin: "16px 0", padding: 16 }}>
-                  <MoleculeSVG mol={e.mol} width={320} height={220} />
+                <div className="molbox molbox--big" style={{ margin: "16px 0", padding: 16 }}>
+                  <SkeletalFormula mol={e.mol} width={340} height={230} />
                 </div>
 
                 <div style={{ marginTop: 12 }}>
