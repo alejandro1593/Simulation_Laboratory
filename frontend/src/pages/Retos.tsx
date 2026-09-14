@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { RETOS_BALANCEO, RETOS_ESTEQ, RETOS_NOMEN } from "../data/herramientas";
+import { api } from "../api/client";
 
 type Modo = "balanceo" | "esteq" | "nomen";
 
@@ -10,6 +11,14 @@ function shuffle<T>(arr: T[]): T[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+function recordProgress(topic: string, ok: boolean, detail: string) {
+  api("/academic/progress", {
+    method: "POST",
+    authed: true,
+    body: { topic, activity_type: "retos", score: ok ? 1 : 0, detail },
+  }).catch(() => undefined);
 }
 
 export default function Retos() {
@@ -45,6 +54,7 @@ export default function Retos() {
     setBRes(ok);
     setScore((s) => ({ ...s, b: [s.b[0], s.b[1] + 1] }));
     if (ok) setScore((s) => ({ ...s, b: [s.b[0] + 1, s.b[1]] }));
+    recordProgress("balanceo", ok, b.eq);
   }
 
   const ansE = ((e.datoGramos / e.M[0]) * (e.rel[1] / e.rel[0])) * e.M[1];
@@ -55,6 +65,7 @@ export default function Retos() {
     const ok = Number.isFinite(v) && rel <= 0.03;
     setERes(ok ? "ok" : "mal");
     setScore((s) => ({ ...s, e: [s.e[0] + (ok ? 1 : 0), s.e[1] + 1] }));
+    recordProgress("esteq", ok, e.q);
   }
 
   function checkN(c: string) {
@@ -62,6 +73,7 @@ export default function Retos() {
     const ok = c === n.a;
     setNRes(ok ? "ok" : "mal");
     setScore((s) => ({ ...s, n: [s.n[0] + (ok ? 1 : 0), s.n[1] + 1] }));
+    recordProgress("nomen", ok, n.q);
   }
 
   function nextN() {

@@ -97,3 +97,12 @@ class DilutionIn(BaseModel):
 
 class Mol3DIn(BaseModel):
     smiles: str = Field(min_length=1, max_length=200)
+
+
+# ---------------------------------------------------------------- progreso
+
+class ProgressIn(BaseModel):
+    topic: str = Field(min_length=1, max_length=64)
+    activity_type: str = Field(min_length=1, max_length=32)
+    score: float | None = Field(default=None, ge=0, le=1)
+    detail: str = Field(default="", max_length=2000)

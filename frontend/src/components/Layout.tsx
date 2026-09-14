@@ -37,6 +37,7 @@ const groups: NavGroup[] = [
   {
     title: "Herramientas",
     items: [
+      { to: "/progreso", label: "Progreso" },
       { to: "/soluciones", label: "Soluciones" },
       { to: "/valoracion", label: "Valoración" },
       { to: "/termoquimica", label: "Termoquímica" },

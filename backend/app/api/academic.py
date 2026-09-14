@@ -1,6 +1,9 @@
-"""Zona Académica: simulador, tutor, tabla periódica, constructor y calculadoras."""
+"""Zona Académica: simulador, tutor, tabla periódica, constructor, calculadoras y progreso."""
 
 from __future__ import annotations
+
+from collections import Counter, defaultdict
+from datetime import UTC, date, datetime, timedelta
 
 from fastapi import APIRouter, Depends, Query
 
@@ -12,6 +15,7 @@ from app.domain import builder, calculators, periodic, simulator, tutor
 from app.domain.balancer import BalanceError, ParseError, balance
 from app.domain.simulator import SimulationError
 from app.domain.tutor import PracticeError
+from app.models import ProgressEntry
 from app.schemas import (
     BalanceIn,
     BuildingIn,
@@ -19,6 +23,7 @@ from app.schemas import (
     DilutionIn,
     Mol3DIn,
     MolarMassIn,
+    ProgressIn,
     SimulateIn,
     SolutionPrepIn,
 )
@@ -180,3 +185,89 @@ def calc_dilution(body: DilutionIn) -> dict:
         return calculators.dilution(c1=body.c1, v1_ml=body.v1_ml, c2_target=body.c2)
     except calculators.CalculationError as exc:
         raise AppError(422, "dilucion_invalida", str(exc)) from exc
+
+
+# ---------------------------------------------------------------- progreso del estudiante
+
+
+@router.post("/progress", status_code=201, dependencies=[rate_student()])
+def record_progress(body: ProgressIn, identity: dict = Depends(guards.academic), db=Depends(get_db)) -> dict:
+    """Registra un intento/práctica (un fila por evento: score 1 = acierto, 0 = fallo)."""
+    user_id = int(identity["sub"])
+    db.add(
+        ProgressEntry(
+            user_id=user_id,
+            topic=body.topic,
+            activity_type=body.activity_type,
+            score=body.score,
+            detail=body.detail,
+        )
+    )
+    db.commit()
+    counts = (
+        db.query(ProgressEntry)
+        .filter(ProgressEntry.user_id == user_id)
+        .with_entities(ProgressEntry.topic, ProgressEntry.score)
+        .all()
+    )
+    return {
+        "user_id": user_id,
+        "topic": body.topic,
+        "score": body.score,
+        "totals": {"attempts": len(counts), "correct": sum(1 for _, s in counts if s == 1)},
+    }
+
+
+def _streak(dates: set[date]) -> int:
+    """Días consecutivos con actividad terminando en hoy (o ayer si hoy aún no hay)."""
+    if not dates:
+        return 0
+    cursor = datetime.now(UTC).date()
+    if cursor not in dates:
+        cursor -= timedelta(days=1)
+    streak = 0
+    while cursor in dates:
+        streak += 1
+        cursor -= timedelta(days=1)
+    return streak
+
+
+@router.get("/progress", dependencies=[rate_student()])
+def student_progress(identity: dict = Depends(guards.academic), db=Depends(get_db)) -> dict:
+    user_id = int(identity["sub"])
+    entries = db.query(ProgressEntry).filter(ProgressEntry.user_id == user_id).all()
+    totals = Counter()
+    correct = Counter()
+    per_day: dict[date, list[float | None]] = defaultdict(list)
+    for e in entries:
+        totals[e.topic] += 1
+        if e.score == 1:
+            correct[e.topic] += 1
+        per_day[e.at.date()].append(e.score)
+
+    topics = [
+        {
+            "topic": t,
+            "attempts": totals[t],
+            "correct": correct[t],
+            "mastery": round(correct[t] * 100 / totals[t], 1) if totals[t] else 0.0,
+        }
+        for t in totals
+    ]
+    topics.sort(key=lambda x: -x["mastery"])
+
+    today = datetime.now(UTC).date()
+    days = []
+    for offset in range(6, -1, -1):
+        d = today - timedelta(days=offset)
+        scores = per_day.get(d, [])
+        days.append({"day": d.isoformat(), "attempts": len(scores), "correct": sum(1 for s in scores if s == 1)})
+
+    attempts = sum(totals.values())
+    correct_total = sum(correct.values())
+    return {
+        "topics": topics,
+        "totals": {"attempts": attempts, "correct": correct_total, "accuracy": round(correct_total * 100 / attempts, 1) if attempts else 0.0},
+        "streak": _streak(set(per_day.keys())),
+        "last_7_days": days,
+    }

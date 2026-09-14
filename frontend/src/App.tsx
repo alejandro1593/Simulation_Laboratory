@@ -10,6 +10,7 @@ import Isomeria from "./pages/Isomeria";
 import LabLibre from "./pages/LabLibre";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
+import MiProgreso from "./pages/MiProgreso";
 import NomenclaturaTutorial from "./pages/NomenclaturaTutorial";
 import OrganicCatalog from "./pages/OrganicCatalog";
 import PeriodicTable from "./pages/PeriodicTable";
@@ -170,6 +171,14 @@ export default function App() {
           element={
             <AcademicZone>
               <Retos />
+            </AcademicZone>
+          }
+        />
+        <Route
+          path="/progreso"
+          element={
+            <AcademicZone>
+              <MiProgreso />
             </AcademicZone>
           }
         />

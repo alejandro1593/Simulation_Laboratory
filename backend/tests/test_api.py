@@ -200,3 +200,40 @@ def test_research_is_sealed():
     assert r.status_code == 401  # sin credenciales researcher
     r = client.post("/api/v1/research/jobs")
     assert r.status_code == 401
+
+
+def test_progress_flow():
+    token = _token()
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # sin actividad aún
+    r = client.get("/api/v1/academic/progress", headers=headers)
+    assert r.status_code == 200
+    body = r.json()
+    assert body["totals"]["attempts"] == 0
+    assert body["streak"] == 0
+
+    # registrar dos aciertos y un fallo en balanceo, y un acierto en nomenclatura
+    for topic, score in [("balanceo", 1), ("balanceo", 1), ("balanceo", 0), ("nomen", 1)]:
+        r = client.post(
+            "/api/v1/academic/progress",
+            headers=headers,
+            json={"topic": topic, "activity_type": "retos", "score": score, "detail": f"{topic} #1"},
+        )
+        assert r.status_code == 201, r.text
+
+    r = client.post("/api/v1/academic/progress", headers=headers)
+    assert r.status_code == 422  # sin body
+
+    r = client.get("/api/v1/academic/progress", headers=headers)
+    assert r.status_code == 200
+    body = r.json()
+    assert body["totals"]["attempts"] == 4
+    assert body["totals"]["correct"] == 3
+    assert body["totals"]["accuracy"] == 75.0
+    by_topic = {t["topic"]: t for t in body["topics"]}
+    assert by_topic["balanceo"]["attempts"] == 3
+    assert by_topic["balanceo"]["mastery"] == pytest.approx(66.7, abs=0.1)
+    assert by_topic["nomen"]["mastery"] == 100.0
+    assert body["streak"] == 1
+    assert len(body["last_7_days"]) == 7
