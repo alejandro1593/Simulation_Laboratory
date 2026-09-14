@@ -750,6 +750,8 @@ label {
 
 .periodic-wrap {
   position: relative;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .periodic {
@@ -978,6 +980,14 @@ label {
   gap: 8px;
   margin: 0 0 16px;
   align-items: center;
+}
+
+.filters > * {
+  min-width: 0;
+}
+
+.filters select {
+  max-width: 100%;
 }
 
 .chip {
@@ -1576,6 +1586,8 @@ canvas.builder-canvas {
 }
 
 .simbench canvas {
+  max-width: 100%;
+  height: auto;
   border-radius: 12px;
   border: 1px solid var(--hair);
   background: radial-gradient(circle at 50% 30%, rgba(120, 160, 255, 0.06), transparent 60%), #0a0f18;
@@ -2123,6 +2135,89 @@ canvas.builder-canvas {
 
 .topic-card.seen .topic-title {
   color: rgba(255, 255, 255, 0.82);
+}
+
+/* ── RESPONSIVE: móviles y tablets ─────────────────────────── */
+
+@media (max-width: 960px) {
+  .main {
+    padding: 22px 18px 64px;
+  }
+}
+
+@media (max-width: 720px) {
+  /* Topbar en dos filas: arriba marca + cuenta, abajo la navegación
+     a lo ancho (scrollable) para que nada se salga del viewport. */
+  .topbar {
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    padding: 8px 14px;
+    height: auto;
+  }
+
+  .brand {
+    font-size: 14px;
+  }
+
+  .account {
+    margin-left: auto;
+    gap: 8px;
+  }
+
+  .account .chip-inline {
+    display: none;
+  }
+
+  .primary,
+  .ghost {
+    padding: 8px 13px;
+    font-size: 13px;
+  }
+
+  .zone-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .nav {
+    order: 9;
+    flex: 1 1 100%;
+    min-width: 0;
+    justify-content: flex-start;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 4px 2px 2px;
+  }
+
+  .nav-trigger {
+    flex: 0 0 auto;
+  }
+
+  .nav-sep {
+    display: none;
+  }
+
+  /* Apila en una sola columna cualquier grilla de 2 columnas
+     (también vence los gridTemplateColumns inline del Simulador). */
+  .grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .main {
+    padding: 18px 14px 60px;
+  }
+
+  .footer {
+    padding: 16px 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand-mark {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
 }
 
 /* ── PRINT SHEETS ─────────────────────────────────────────────── */
