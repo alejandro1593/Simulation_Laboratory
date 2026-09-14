@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import {
   COMPUESTOS_INTERES,
   COMPUESTOS_INTERES_NOTE,
+  GHS_ORGANICOS,
   GRUPOS_FUNCIONALES,
   PRIORIDADES_GRUPOS,
   SERIES_HOMOLOGAS,
 } from "../data/organic";
 import SkeletalFormula from "../components/SkeletalFormula";
+import GhsPictos from "../components/GhsPictos";
 
 export default function OrganicCatalog() {
   const [q, setQ] = useState("");
@@ -301,6 +303,12 @@ export default function OrganicCatalog() {
                 ) : (
                   <span className="ok-tag small">Uso cotidiano habitual</span>
                 )}
+                {GHS_ORGANICOS[c.id] && (
+                  <div className="row" style={{ gap: 6 }}>
+                    <span className="hint-col">Pictogramas GHS</span>
+                    <GhsPictos codes={GHS_ORGANICOS[c.id]} size={26} />
+                  </div>
+                )}
                 {c.nota && <p className="captions" style={{ margin: 0 }}>{c.nota}</p>}
               </div>
             </div>
@@ -449,6 +457,15 @@ export default function OrganicCatalog() {
                 </div>
                 {c.riesgo && <span className="risk-tag" style={{ fontSize: 12, alignSelf: "start" }}>{c.riesgo}</span>}
                 {!c.riesgo && <span className="ok-tag small" style={{ alignSelf: "start" }}>Uso cotidiano habitual</span>}
+                {GHS_ORGANICOS[c.id] && (
+                  <div>
+                    <span className="hint-col" style={{ display: "block" }}>Pictogramas GHS</span>
+                    <div className="row" style={{ marginTop: 4 }}>
+                      <GhsPictos codes={GHS_ORGANICOS[c.id]} size={34} />
+                      <span className="faint small" style={{ flex: 1 }}>Clasificación GHS de peligro publicada.</span>
+                    </div>
+                  </div>
+                )}
                 {c.nota && <p className="captions">{c.nota}</p>}
               </div>
             </div>

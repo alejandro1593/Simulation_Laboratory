@@ -2,13 +2,15 @@ import { useMemo, useState } from "react";
 import { CATEGORIAS } from "../data/elements";
 import { PICTOGRAMAS_GHS } from "../data/equipo";
 import { TOX_REACTIVOS, TOX_ELEMENTOS, NOTA_TOX } from "../data/toxicologia";
+import GhsPictos from "../components/GhsPictos";
 
 type Tab = "reactivos" | "elementos" | "ambos";
 
 function PictChips({ codes }: { codes: string[] }) {
   if (codes.length === 0) return <span className="muted">—</span>;
   return (
-    <span style={{ display: "inline-flex", flexWrap: "wrap", gap: 4 }}>
+    <span style={{ display: "inline-flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
+      <GhsPictos codes={codes} size={22} />
       {codes.map((c) => {
         const p = PICTOGRAMAS_GHS.find((g) => g.id === c);
         return (

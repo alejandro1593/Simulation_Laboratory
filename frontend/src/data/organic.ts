@@ -1089,3 +1089,24 @@ export const COMPUESTOS_INTERES_NOTE =
   "Los organismos y la industria producen millones de compuestos orgánicos distintos. " +
   "Esta es una muestra representativa de los más cotidianos, con sus fórmulas y masas molares reales. " +
   "Las estructuras complejas (siempre por encima de ~15 átomos) no se dibujan aquí: preferimos no mostrar una conectividad incorrecta en lugar de inventarla.";
+
+/* Clasificación GHS para compuestos con peligrosidad bien establecida
+   (clasificaciones publicadas tipo CLP/REACH). Los compuestos sin entrada
+   no tienen un conjunto GHS consensuado (p. ej. gluten, colesterol). */
+export const GHS_ORGANICOS: Record<string, string[]> = {
+  cafeina: ["g07"],
+  aspirina: ["g07"],
+  paracetamol: ["g07"],
+  ibuprofeno: ["g07"],
+  "acido-salicilico": ["g07"],
+  nicotina: ["g06", "g08", "g09"],
+  etanol: ["g02"],
+  metanol: ["g02", "g06", "g08"],
+  acetona: ["g02"],
+  formaldehido: ["g06", "g08", "g07"],
+  tolueno: ["g02", "g07", "g08", "g09"],
+  anilina: ["g06", "g07", "g08", "g09"],
+  naftaleno: ["g07", "g08", "g09"],
+  "acido-lactico": ["g05"],
+  "acido-butirico": ["g02", "g05"],
+};
