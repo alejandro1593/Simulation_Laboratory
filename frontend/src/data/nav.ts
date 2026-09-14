@@ -53,6 +53,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { to: "/vsepr", label: "Geometría (VSEPR)", icon: "📐", desc: "Forma de las moléculas" },
       { to: "/isomeria", label: "Isomería", icon: "🔄", desc: "Conexión molecular" },
       { to: "/retos", label: "Retos", icon: "🏆", desc: "Misiones de química" },
+      { to: "/tabla/quiz", label: "Quiz de la tabla", icon: "🎯", desc: "Encuentra el elemento" },
       { to: "/constructor", label: "Constructor", icon: "🛠️", desc: "Arma y simula" },
     ],
   },

@@ -906,6 +906,56 @@ label {
   display: none;
 }
 
+/* ── Quiz de Tabla Periódica ─────────────────────────────────── */
+.periodic.pz {
+  grid-template-columns: repeat(19, minmax(26px, 1fr));
+  gap: 2px;
+  min-width: 560px;
+}
+
+.pz-cell {
+  display: grid;
+  place-content: center;
+  aspect-ratio: 1 / 1;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: clamp(8px, 1.1vw, 13px);
+  cursor: pointer;
+  transition: 0.12s;
+  padding: 0;
+  min-width: 0;
+}
+
+.pz-cell:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 6px 14px rgba(10, 8, 28, 0.45);
+  z-index: 2;
+}
+
+.pz-cell:disabled {
+  cursor: default;
+}
+
+.pz-cell.pz-dim {
+  opacity: 0.22;
+}
+
+.pz-cell.pz-hit {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 4px rgba(92, 232, 192, 0.25);
+  z-index: 3;
+}
+
+@media (max-width: 720px) {
+  .periodic.pz {
+    min-width: 520px;
+  }
+}
+
 .legend {
   display: flex;
   flex-wrap: wrap;

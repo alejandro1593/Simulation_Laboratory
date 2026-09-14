@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { CATEGORIAS, ELEMENTS, estado_en } from "../data/elements";
 import type { ElementRow, Categoría } from "../data/elements";
 import ShellDiagram, { poblacionDesdeConfig } from "../components/ShellDiagram";
@@ -201,6 +202,7 @@ export default function PeriodicTable() {
           onChange={(ev) => setQ(ev.target.value)}
         />
         <button className="chip no-print" onClick={() => window.print()}>🖨 Imprimir tabla</button>
+        <Link className="chip" to="/tabla/quiz">🎯 Quiz · ponte a prueba</Link>
         <button className={modo === "ninguna" ? "chip on" : "chip"} onClick={() => setModo("ninguna")}>
           Normal
         </button>

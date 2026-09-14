@@ -28,6 +28,7 @@ const TOPIC_LABEL: Record<string, string> = {
   nomen: "Nomenclatura",
   aprender: "Centro de aprendizaje",
   practica: "Práctica de problemas",
+  tabla: "Quiz de la tabla periódica",
 };
 
 function masteryTone(m: number): string {

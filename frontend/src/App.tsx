@@ -18,6 +18,7 @@ import Nombralo from "./pages/Nombralo";
 import NombraloInorg from "./pages/NombraloInorg";
 import OrganicCatalog from "./pages/OrganicCatalog";
 import PeriodicTable from "./pages/PeriodicTable";
+import PeriodicQuiz from "./pages/PeriodicQuiz";
 import Register from "./pages/Register";
 import Retos from "./pages/Retos";
 import SimulatorPage from "./pages/SimulatorPage";
@@ -55,6 +56,14 @@ export default function App() {
           element={
             <AcademicZone>
               <PeriodicTable />
+            </AcademicZone>
+          }
+        />
+        <Route
+          path="/tabla/quiz"
+          element={
+            <AcademicZone>
+              <PeriodicQuiz />
             </AcademicZone>
           }
         />
