@@ -112,47 +112,180 @@ body {
 .nav {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   flex: 1;
   overflow-x: auto;
   scrollbar-width: none;
+  padding: 2px 0;
 }
 
 .nav::-webkit-scrollbar {
   display: none;
 }
 
-.nav-item {
+.nav-dots {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav-trigger {
   position: relative;
-  padding: 7px 13px;
-  border-radius: 8px;
-  font-size: 13.5px;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 550;
   color: var(--muted);
+  cursor: pointer;
   text-decoration: none;
-  transition: 0.15s;
   white-space: nowrap;
+  transition: 0.16s;
+  user-select: none;
 }
 
-.nav-item:hover {
+.nav-trigger:hover {
   color: var(--txt);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.25);
 }
 
-.nav-item.active {
+.nav-trigger.active {
+  color: var(--accent);
+  border-color: rgba(92, 232, 192, 0.28);
+  background: rgba(92, 232, 192, 0.07);
+  box-shadow: 0 0 0 1px rgba(92, 232, 192, 0.08), 0 2px 16px rgba(92, 232, 192, 0.10);
+}
+
+.nav-trigger-ico {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.chevron {
+  font-size: 10px;
+  color: var(--faint);
+  transition: transform 0.2s;
+  margin-left: 1px;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
   color: var(--accent);
 }
 
-.nav-item.active::after {
-  content: "";
+.nav-sep {
+  color: var(--faint);
+  margin: 0 4px;
+  font-size: 13px;
+  user-select: none;
+}
+
+/* ── DROPDOWN PANELS ──────────────────────────────────────────── */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown.align-right .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+.dropdown-menu {
   position: absolute;
-  left: 13px;
-  right: 13px;
-  bottom: -2px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--accent);
-  box-shadow: 0 0 10px rgba(92, 232, 192, 0.6);
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 258px;
+  padding: 6px;
+  background: rgba(13, 16, 38, 0.92);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(92, 232, 192, 0.04), 0 0 30px rgba(92, 232, 192, 0.06);
+  z-index: 90;
+  animation: dropIn 0.16s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  text-decoration: none;
+  color: var(--txt);
+  transition: 0.14s;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dropdown-item.active {
+  background: rgba(92, 232, 192, 0.09);
+}
+
+.dropdown-item.active:hover {
+  background: rgba(92, 232, 192, 0.13);
+}
+
+.dropdown-ico {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dropdown-item.active .dropdown-ico {
+  background: rgba(92, 232, 192, 0.12);
+  border-color: rgba(92, 232, 192, 0.22);
+}
+
+.dropdown-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.dropdown-label {
+  font-size: 13.5px;
+  font-weight: 550;
+}
+
+.dropdown-desc {
+  font-size: 11.5px;
+  color: var(--faint);
+}
+
+.dropdown-check {
+  margin-left: auto;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .account {
@@ -1491,71 +1624,6 @@ canvas.builder-canvas {
   font-family: var(--mono);
   z-index: 60;
   white-space: nowrap;
-}
-
-/* ── NAV SELECT DROPDOWNS ─────────────────────────────────────── */
-.nav-select {
-  appearance: none;
-  -webkit-appearance: none;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  padding: 5px 24px 5px 10px;
-  font-size: 12.5px;
-  font-family: var(--sans);
-  font-weight: 500;
-  color: var(--muted);
-  cursor: pointer;
-  transition: 0.15s;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238890a4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  white-space: nowrap;
-  min-width: 0;
-}
-
-.nav-select:hover {
-  color: var(--txt);
-  background-color: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.14);
-}
-
-.nav-select:focus {
-  outline: none;
-  border-color: var(--accent);
-  color: var(--txt);
-}
-
-.nav-select option {
-  background: #0b0f18;
-  color: var(--txt);
-}
-
-.nav-pill {
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  text-decoration: none;
-  transition: 0.15s;
-  white-space: nowrap;
-}
-
-.nav-pill:hover {
-  color: var(--txt);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.nav-pill.active {
-  color: var(--accent);
-}
-
-.nav-sep {
-  color: var(--faint);
-  margin: 0 4px;
-  font-size: 13px;
-  user-select: none;
 }
 
 /* ── APRENDER PAGE ────────────────────────────────────────────── */
