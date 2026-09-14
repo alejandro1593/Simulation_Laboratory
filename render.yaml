@@ -37,7 +37,6 @@ services:
     plan: free
     envVars:
       - key: API_UPSTREAM
-        fromService:
-          name: molcore-api
-          type: web
-          property: hostport
+        # URL pública de la API: en free tier el nombre interno (molcore-api) no
+        # se resuelve desde la web, así que se proxya contra la URL pública.
+        value: https://molcore-api.onrender.com
