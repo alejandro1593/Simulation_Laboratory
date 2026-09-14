@@ -200,6 +200,7 @@ export default function PeriodicTable() {
           value={q}
           onChange={(ev) => setQ(ev.target.value)}
         />
+        <button className="chip no-print" onClick={() => window.print()}>🖨 Imprimir tabla</button>
         <button className={modo === "ninguna" ? "chip on" : "chip"} onClick={() => setModo("ninguna")}>
           Normal
         </button>
@@ -356,6 +357,29 @@ export default function PeriodicTable() {
           )}
         </div>
       )}
+
+      <div className="print-sheet" aria-hidden="true">
+        <h2>Tabla periódica · 118 elementos (MolCore Lab)</h2>
+        <table>
+          <thead>
+            <tr><th>Z</th><th>Símbolo</th><th>Nombre</th><th>Masa (u)</th><th>Clasificación</th><th>Estado 20 °C</th><th>Pto. fusión (°C)</th></tr>
+          </thead>
+          <tbody>
+            {ELEMENTS.map((e) => (
+              <tr key={e.z}>
+                <td>{e.z}</td>
+                <td className="mono"><b>{e.s}</b></td>
+                <td>{e.nE}</td>
+                <td className="mono">{e.m}</td>
+                <td>{CATEGORIAS[e.cat]}</td>
+                <td>{estado_en(e.st)}</td>
+                <td className="mono">{e.mp != null ? e.mp : "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="footer-print">MolCore Lab · datos curados · generado el {new Date().toLocaleDateString("es")}</p>
+      </div>
     </div>
   );
 }

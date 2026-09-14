@@ -2064,3 +2064,94 @@ canvas.builder-canvas {
 .topic-card.seen .topic-title {
   color: rgba(255, 255, 255, 0.82);
 }
+
+/* ── PRINT SHEETS ─────────────────────────────────────────────── */
+.print-sheet {
+  display: none;
+}
+
+@media print {
+  /* Hide UI chrome */
+  .topbar, .footer, .filters, .nav-dots, .nav, .account, .no-print,
+  .back-btn, .chip, button, .search, input[type="text"], input[type="number"],
+  .p-tip, .modal-back, .cmd-overlay, .calc-body, .topic-body, .topic-chevron,
+  .qstats, .qform, .qres, .calc-header[aria-expanded] {
+    display: none !important;
+  }
+
+  /* Force light theme */
+  :root {
+    --bg: #fff !important;
+    --surface: #f8f9fa !important;
+    --txt: #111 !important;
+    --muted: #444 !important;
+    --accent: #007a5a !important;
+  }
+
+  body, .app, .main {
+    background: #fff !important;
+    color: #111 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .page {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Show print sheets */
+  .print-sheet {
+    display: block !important;
+    break-inside: avoid;
+    margin-top: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print-sheet h2 {
+    font-size: 14px;
+    margin: 18px 0 8px;
+    color: #007a5a;
+    border-bottom: 1.5px solid #007a5a;
+    padding-bottom: 3px;
+  }
+
+  .print-sheet table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9px;
+    margin: 4px 0 12px;
+    break-inside: avoid;
+  }
+
+  .print-sheet th,
+  .print-sheet td {
+    padding: 3px 6px;
+    border: 0.5px solid #ccc;
+    text-align: left;
+  }
+
+  .print-sheet th {
+    background: #e8f5ee;
+    font-weight: 600;
+    color: #007a5a;
+  }
+
+  .print-sheet td.mono {
+    font-family: var(--mono);
+  }
+
+  .print-sheet .footer-print {
+    font-size: 8px;
+    color: #888;
+    margin-top: 14px;
+    text-align: center;
+    border-top: 0.5px solid #ccc;
+    padding-top: 4px;
+  }
+
+  /* Force page break controls */
+  .print-page-break {
+    page-break-before: always;
+  }
+}

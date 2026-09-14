@@ -59,6 +59,7 @@ export default function OrganicCatalog() {
         <Link className="chip" to="/catalogo/organico/nombralo" style={{ textDecoration: "none" }}>
           🧬 Nómbralo
         </Link>
+        <button className="chip" onClick={() => window.print()}>🖨 Imprimir fichas</button>
         <input
           className="search"
           placeholder="Buscar grupo o molécula (etanol, cetona, –OH, aldehído…)…"
@@ -218,6 +219,49 @@ export default function OrganicCatalog() {
       )}
 
       <p className="captions">ℹ {COMPUESTOS_INTERES_NOTE}</p>
+
+      <div className="print-sheet" aria-hidden="true">
+        <h2>Catálogo orgánico · grupos funcionales (MolCore Lab)</h2>
+        <table>
+          <thead>
+            <tr><th>Grupo</th><th>Fórmula</th><th>Sufijo</th><th>Prefijo</th><th>Ejemplo (IUPAC)</th><th>Común</th></tr>
+          </thead>
+          <tbody>
+            {GRUPOS_FUNCIONALES.map((g) => (
+              <tr key={g.id}>
+                <td><b>{g.nombre}</b><br /><span style={{ color: "#555", fontSize: 8 }}>{g.grupo}</span></td>
+                <td className="mono">{g.formula}</td>
+                <td className="mono">{g.sufijo}</td>
+                <td className="mono">{g.prefijo}</td>
+                <td>{g.ejemplos[0]?.iupac}</td>
+                <td>{g.ejemplos[0]?.comun}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <h2>Compuestos de interés cotidiano</h2>
+        <table>
+          <thead>
+            <tr><th>Nombre</th><th>IUPAC</th><th>Fórmula</th><th>Masa (g/mol)</th><th>Tipo</th><th>Fuente</th><th>Uso</th><th>Riesgo</th></tr>
+          </thead>
+          <tbody>
+            {COMPUESTOS_INTERES.map((c) => (
+              <tr key={c.id}>
+                <td><b>{c.nombre}</b></td>
+                <td>{c.iupac}</td>
+                <td className="mono">{c.formula}</td>
+                <td className="mono">{c.masa}</td>
+                <td>{c.gf}</td>
+                <td>{c.fuente}</td>
+                <td>{c.uso}</td>
+                <td>{c.riesgo || "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="footer-print">MolCore Lab · datos curados y verificados · generado el {new Date().toLocaleDateString("es")}</p>
+      </div>
 
       {modal && (() => {
         const close = () => setModal(null);
