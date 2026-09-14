@@ -12,6 +12,7 @@ import LabLibre from "./pages/LabLibre";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import MiProgreso from "./pages/MiProgreso";
+import Practice from "./pages/Practice";
 import NomenclaturaTutorial from "./pages/NomenclaturaTutorial";
 import Nombralo from "./pages/Nombralo";
 import OrganicCatalog from "./pages/OrganicCatalog";
@@ -189,6 +190,14 @@ export default function App() {
           element={
             <AcademicZone>
               <Aprender />
+            </AcademicZone>
+          }
+        />
+        <Route
+          path="/practica"
+          element={
+            <AcademicZone>
+              <Practice />
             </AcademicZone>
           }
         />

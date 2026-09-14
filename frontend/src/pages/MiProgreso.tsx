@@ -26,6 +26,8 @@ const TOPIC_LABEL: Record<string, string> = {
   balanceo: "Balanceo",
   esteq: "Estequiometría",
   nomen: "Nomenclatura",
+  aprender: "Centro de aprendizaje",
+  practica: "Práctica de problemas",
 };
 
 function masteryTone(m: number): string {

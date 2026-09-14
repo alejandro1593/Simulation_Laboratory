@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { api } from "../api/client";
 
 /* ------------------------------------------------------------------ */
 /*  Tiny helpers                                                       */
@@ -743,14 +745,80 @@ const CALCULATORS = [
   { id: "concentraciones", title: "Concentraciones completas", desc: "Molaridad, molalidad, % peso a partir de masa, MM y volumen", Comp: ConcentracionesCalc },
 ];
 
+export const TOPIC_INDEX = TOPICS.map((t) => ({ id: t.id, title: t.title, summary: t.summary, level: t.level }));
+export const CALCULATOR_INDEX = CALCULATORS.map((c) => ({ id: c.id, title: c.title, desc: c.desc }));
+
 /* ------------------------------------------------------------------ */
 /*  MAIN PAGE                                                          */
 /* ------------------------------------------------------------------ */
+
+const SEEN_KEY = "mc_seen_topics";
+
+function readSeen(): string[] {
+  try {
+    const raw = localStorage.getItem(SEEN_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
 
 export default function Aprender() {
   const [openTopic, setOpenTopic] = useState<string | null>(null);
   const [filter, setFilter] = useState<Level | "todos">("todos");
   const [openCalc, setOpenCalc] = useState<string | null>(null);
+  const [seen, setSeen] = useState<string[]>(readSeen);
+  const repoSeen = useRef(new Set<string>());
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash.startsWith("#topic-")) {
+      const id = hash.slice(7);
+      setOpenTopic(id);
+      markSeen(id);
+      setTimeout(() => {
+        document.getElementById(`topic-card-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
+    } else if (hash.startsWith("#calc-")) {
+      const id = hash.slice(6);
+      setOpenCalc(id);
+      markSeen(`calc-${id}`);
+      setTimeout(() => {
+        document.getElementById(`calc-card-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hash]);
+
+  const markSeen = (id: string) => {
+    if (repoSeen.current.has(id)) return;
+    repoSeen.current.add(id);
+    if (!seen.includes(id)) {
+      const next = [...seen, id];
+      setSeen(next);
+      try { localStorage.setItem(SEEN_KEY, JSON.stringify(next)); } catch { /* sin almacenamiento */ }
+      api("/academic/progress", {
+        method: "POST",
+        authed: true,
+        body: { topic: "aprender", activity_type: "modulo", score: 1, detail: id },
+      }).catch(() => { /* el seguimiento es best-effort */ });
+    }
+  };
+
+  const toggleTopic = (id: string) => {
+    const next = openTopic === id ? null : id;
+    setOpenTopic(next);
+    if (next) markSeen(id);
+  };
+
+  const toggleCalc = (id: string) => {
+    const next = openCalc === id ? null : id;
+    setOpenCalc(next);
+    if (next) {
+      const c = CALCULATOR_INDEX.find((x) => x.id === id);
+      if (c) markSeen(`calc-${id}`);
+    }
+  };
 
   const filtered = filter === "todos" ? TOPICS : TOPICS.filter((t) => t.level === filter);
   const groupOrder: Level[] = ["basico", "intermedio", "avanzado", "industria"];
@@ -759,6 +827,10 @@ export default function Aprender() {
     items: filtered.filter((t) => t.level === lv),
   })).filter((g) => g.items.length > 0);
 
+  const totalTopics = TOPICS.length;
+  const seenCount = TOPICS.filter((t) => seen.includes(t.id)).length;
+  const pct = Math.round((seenCount * 100) / totalTopics);
+
   return (
     <div className="aprender">
       <header className="aprender-head">
@@ -766,6 +838,12 @@ export default function Aprender() {
         <p className="lead">
           Desde los fundamentos del átomo hasta procesos industriales. Todo con datos reales, fórmulas verificables y calculadoras interactivas.
         </p>
+        <div className="filters" style={{ marginTop: 10 }}>
+          <Link className="chip" to="/practica">✍️ Práctica con solución</Link>
+          <span className="chip" style={{ borderColor: "transparent", cursor: "default" }} title="Módulos abiertos">
+            📊 {seenCount}/{totalTopics} módulos vistos ({pct}%)
+          </span>
+        </div>
       </header>
 
       {/* ── LEVEL FILTER ──────────────────────────────────────── */}
@@ -786,13 +864,15 @@ export default function Aprender() {
           <div className="topic-list">
             {g.items.map((t) => {
               const isOpen = openTopic === t.id;
+              const isSeen = seen.includes(t.id);
               return (
-                <div key={t.id} className={`topic-card ${isOpen ? "open" : ""}`}>
+                <div key={t.id} id={`topic-card-${t.id}`} className={`topic-card ${isOpen ? "open" : ""} ${isSeen ? "seen" : ""}`}>
                   <button
                     className="topic-header"
-                    onClick={() => setOpenTopic(isOpen ? null : t.id)}
+                    onClick={() => toggleTopic(t.id)}
                     aria-expanded={isOpen}
                   >
+                    {isSeen && <span className="topic-seen" title="Módulo abierto">✓</span>}
                     <span className="topic-title">{t.title}</span>
                     <span className="topic-level" style={{ color: LEVEL_COLOR[t.level] }}>{LEVEL_LABEL[t.level]}</span>
                     <span className="topic-chevron">{isOpen ? "▾" : "▸"}</span>
@@ -832,10 +912,10 @@ export default function Aprender() {
           {CALCULATORS.map((c) => {
             const isOpen = openCalc === c.id;
             return (
-              <div key={c.id} className={`calc-card ${isOpen ? "open" : ""}`}>
+              <div key={c.id} id={`calc-card-${c.id}`} className={`calc-card ${isOpen ? "open" : ""}`}>
                 <button
                   className="calc-header"
-                  onClick={() => setOpenCalc(isOpen ? null : c.id)}
+                  onClick={() => toggleCalc(c.id)}
                   aria-expanded={isOpen}
                 >
                   <div>

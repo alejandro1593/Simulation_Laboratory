@@ -1,64 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
-
-interface NavItem {
-  to: string;
-  label: string;
-  icon: string;
-  desc?: string;
-}
-
-interface NavGroup {
-  title: string;
-  items: NavItem[];
-}
-
-const groups: NavGroup[] = [
-  {
-    title: "Laboratorio",
-    items: [
-      { to: "/simulador", label: "Simulador", icon: "⚛️", desc: "Monta experimentos guiados" },
-      { to: "/laboratorio", label: "Laboratorio libre", icon: "🧪", desc: "Reacciones sin guion" },
-      { to: "/tutor", label: "Tutor", icon: "🎓", desc: "Ejercicios paso a paso" },
-      { to: "/ensayos", label: "Ensayos", icon: "📋", desc: "Prueba tu conocimiento" },
-      { to: "/toxicologia", label: "Toxicología", icon: "☠️", desc: "Dosis y DL50" },
-    ],
-  },
-  {
-    title: "Catálogos",
-    items: [
-      { to: "/catalogo/inorganico", label: "Inorgánico", icon: "🧂", desc: "Compuestos y iones" },
-      { to: "/catalogo/organico", label: "Orgánico", icon: "🧬", desc: "Moléculas, fórmulas y usos" },
-      { to: "/catalogo/organico/aprender", label: "Nomenclatura orgánica", icon: "✏️", desc: "Aprende a nombrar" },
-      { to: "/catalogo/organico/nombralo", label: "Nómbralo", icon: "🎯", desc: "Adivina la molécula" },
-    ],
-  },
-  {
-    title: "Aprender",
-    items: [
-      { to: "/aprender", label: "Centro de aprendizaje", icon: "📚", desc: "Todo el temario" },
-      { to: "/aprender#fundamentos", label: "Fundamentos", icon: "🔍", desc: "Átomo, enlaces, materia" },
-      { to: "/aprender#general", label: "Química general", icon: "⚗️", desc: "Estequiometría, pH, equilibrio" },
-      { to: "/aprender#industria", label: "Industria", icon: "🏭", desc: "Procesos y materiales" },
-      { to: "/aprender#calculadoras", label: "Calculadoras", icon: "🧮", desc: "Moles↔gramos, diluciones…" },
-    ],
-  },
-  {
-    title: "Herramientas",
-    items: [
-      { to: "/progreso", label: "Mi progreso", icon: "📈", desc: "Estadísticas de aprendizaje" },
-      { to: "/calculadora", label: "Calculadora", icon: "🧮", desc: "Kernel de cálculo químico" },
-      { to: "/soluciones", label: "Soluciones", icon: "💧", desc: "Preparación y dilución" },
-      { to: "/valoracion", label: "Valoración", icon: "⚖️", desc: "Titulación ácido-base" },
-      { to: "/termoquimica", label: "Termoquímica", icon: "🔥", desc: "Calores de reacción" },
-      { to: "/vsepr", label: "Geometría (VSEPR)", icon: "📐", desc: "Forma de las moléculas" },
-      { to: "/isomeria", label: "Isomería", icon: "🔄", desc: "Conexión molecular" },
-      { to: "/retos", label: "Retos", icon: "🏆", desc: "Misiones de química" },
-      { to: "/constructor", label: "Constructor", icon: "🛠️", desc: "Arma y simula" },
-    ],
-  },
-];
+import { NAV_GROUPS, NavGroup } from "../data/nav";
+import CommandPalette from "./CommandPalette";
 
 function DropdownMenu({ group, align }: { group: NavGroup; align: "left" | "right" }) {
   const [open, setOpen] = useState(false);
@@ -160,24 +104,52 @@ function DropdownMenu({ group, align }: { group: NavGroup; align: "left" | "righ
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
+  const [cmdOpen, setCmdOpen] = useState(false);
   const { hash } = useLocation();
 
   useEffect(() => {
-    if (hash) {
-      const el = document.getElementById(hash.slice(1));
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      window.scrollTo({ top: 0 });
-    }
+    if (!hash) return;
+    const id = decodeURIComponent(hash.slice(1));
+    if (!id) return;
+    let raf = 0;
+    const tryScroll = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (raf < 12) {
+        raf += 1;
+        requestAnimationFrame(tryScroll);
+      }
+    };
+    raf += 1;
+    tryScroll();
+    return () => cancelAnimationFrame(raf);
   }, [hash]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setCmdOpen((v) => !v);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <div className="app">
+      <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} />
       <header className="topbar">
         <Link to="/" className="brand" aria-label="MolCore Lab">
           <span className="brand-mark">⬢</span> MolCore Lab
         </Link>
         <nav className="nav">
+          <button className="nav-trigger search-trigger" onClick={() => setCmdOpen(true)}>
+            <span className="nav-trigger-ico">🔎</span>
+            <span className="nav-trigger-label muted small">⌘K</span>
+          </button>
+
           <NavLink
             to="/tabla"
             className={({ isActive }) => (isActive ? "nav-trigger active" : "nav-trigger")}
@@ -186,15 +158,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <span className="nav-trigger-label">Periódica</span>
           </NavLink>
 
-          {groups.map((g, gi) => {
-            const last = gi === groups.length - 1;
-            return (
-              <div key={g.title} className="nav-dots">
-                {gi > 0 && <span className="nav-sep">·</span>}
-                <DropdownMenu group={g} align={last ? "right" : "left"} />
-              </div>
-            );
-          })}
+          {NAV_GROUPS.map((g, gi) => (
+            <div key={g.title} className="nav-dots">
+              <span className="nav-sep">·</span>
+              <DropdownMenu group={g} align={gi === NAV_GROUPS.length - 1 ? "right" : "left"} />
+            </div>
+          ))}
         </nav>
         <div className="account">
           {user ? (
