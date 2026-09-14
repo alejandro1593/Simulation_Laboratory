@@ -10,12 +10,11 @@ server {
 
   # API: se proxya al backend (mismo origen ante el navegador, sin CORS).
   # API_UPSTREAM es una URL completa (http://api:8000 en docker-compose local,
-  # https://molcore-api.onrender.com en Render). Al usar variable, nginx resuelve
-  # en runtime a través de resolver (DNS local de Docker o DNS público).
+  # https://molcore-api.onrender.com en Render). Hostname estático: nginx lo
+  # resuelve en el arranque con el DNS del sistema (resolv.conf), válido en
+  # Render y en Docker.
   location /api/ {
-    resolver 127.0.0.11 8.8.8.8 1.1.1.1 valid=30s ipv6=off;
-    set $api_upstream ${API_UPSTREAM};
-    proxy_pass $api_upstream$request_uri;
+    proxy_pass ${API_UPSTREAM};
     proxy_http_version 1.1;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
