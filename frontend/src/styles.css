@@ -1276,10 +1276,23 @@ canvas.builder-canvas {
 }
 
 .org-card {
+  position: relative;
   background: linear-gradient(180deg, rgba(22, 31, 48, 0.9), rgba(16, 23, 37, 0.9));
   border: 1px solid var(--hair);
   border-radius: var(--r);
   padding: 16px 18px;
+}
+
+.cmp-add:disabled {
+  opacity: 0.4;
+}
+
+.cmp-add:not(.on) {
+  color: var(--muted);
+}
+
+.cmp-table td {
+  font-family: var(--sans);
 }
 
 .org-card h3 {

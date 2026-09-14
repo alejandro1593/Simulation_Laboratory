@@ -12,6 +12,8 @@ import SkeletalFormula from "../components/SkeletalFormula";
 export default function OrganicCatalog() {
   const [q, setQ] = useState("");
   const [gid, setGid] = useState<string | null>(null);
+  const [cmpOn, setCmpOn] = useState(false);
+  const [cmp, setCmp] = useState<string[]>([]);
   const gq = q.trim().toLowerCase();
 
   type ModalState =
@@ -44,6 +46,24 @@ export default function OrganicCatalog() {
       c.uso.toLowerCase().includes(gq)
   );
 
+  const cmpToggle = (id: string) => {
+    setCmp((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      if (prev.length >= 3) return prev;
+      return [...prev, id];
+    });
+  };
+
+  const cmpItems = cmp.map((id) => COMPUESTOS_INTERES.find((c) => c.id === id)).filter((c): c is (typeof COMPUESTOS_INTERES)[number] => Boolean(c));
+  const cmpRows: [string, (c: (typeof COMPUESTOS_INTERES)[number]) => string][] = [
+    ["Fórmula", (c) => c.formula],
+    ["Masa molar", (c) => `${c.masa} g/mol`],
+    ["Tipo", (c) => c.gf],
+    ["Fuente", (c) => c.fuente],
+    ["Uso", (c) => c.uso],
+    ["Riesgo", (c) => c.riesgo || "Uso cotidiano habitual"],
+  ];
+
   return (
     <div className="page">
       <h1>Catálogo orgánico</h1>
@@ -74,7 +94,65 @@ export default function OrganicCatalog() {
             </option>
           ))}
         </select>
+        <button
+          className={`chip ${cmpOn ? "on" : ""}`}
+          onClick={() => setCmpOn((v) => !v)}
+          style={{ cursor: "pointer" }}
+          aria-pressed={cmpOn}
+        >
+          ⚖ Comparar
+        </button>
       </div>
+
+      {cmpOn && (
+        <div className="panel cmp-panel" style={{ margin: "0 0 4px" }}>
+          <div className="row">
+            <span className="small muted">⚖ Selecciona hasta <b>3</b> compuestos para comparar</span>
+            {cmp.length > 0 && (
+              <button className="tiny" onClick={() => setCmp([])}>Limpiar</button>
+            )}
+          </div>
+          {cmpItems.length > 0 && (
+            <div className="row" style={{ marginTop: 8, flexWrap: "wrap" }}>
+              {cmpItems.map((c) => (
+                <span key={c.id} className="chip" style={{ borderColor: "var(--accent)" }}>
+                  {c.nombre} <button className="tiny" style={{ marginLeft: 6 }} onClick={() => cmpToggle(c.id)} title="Quitar">✕</button>
+                </span>
+              ))}
+              <span className="faint small">{cmpItems.length}/3 seleccionados</span>
+            </div>
+          )}
+
+          {cmpItems.length >= 2 && (
+            <div className="cmp-table-wrap" style={{ marginTop: 12, overflowX: "auto" }}>
+              <table className="table cmp-table">
+                <thead>
+                  <tr>
+                    <th>Campo</th>
+                    {cmpItems.map((c) => (
+                      <th key={c.id} className="mono">{c.nombre}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {cmpRows.map(([label, fn]) => (
+                    <tr key={label}>
+                      <td className="muted small">{label}</td>
+                      {cmpItems.map((c) => (
+                        <td key={c.id} className="small">{fn(c)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {cmpItems.length === 1 && (
+            <p className="captions" style={{ marginTop: 8 }}>Agrega al menos un segundo compuesto para ver la tabla comparativa.</p>
+          )}
+        </div>
+      )}
 
       <div className="org-grid" style={{ marginTop: 8 }}>
         {grupos.map((g) => (
@@ -190,6 +268,18 @@ export default function OrganicCatalog() {
               onClick={() => setModal({ kind: "compuesto", cid: c.id })}
               onKeyDown={(e) => e.key === "Enter" && setModal({ kind: "compuesto", cid: c.id })}
             >
+              {cmpOn && (
+                <button
+                  className={`tiny cmp-add ${cmp.includes(c.id) ? "on" : ""}`}
+                  style={{ position: "absolute", top: 8, right: 8, display: "grid", placeItems: "center" }}
+                  onClick={(e) => { e.stopPropagation(); cmpToggle(c.id); }}
+                  disabled={cmp.length >= 3 && !cmp.includes(c.id)}
+                  title={cmp.includes(c.id) ? "Quitar del comparador" : cmp.length >= 3 ? "Límite de 3 alcanzado" : "Agregar al comparador"}
+                  aria-label={`Comparar ${c.nombre}`}
+                >
+                  {cmp.includes(c.id) ? "✕" : "⚖"}
+                </button>
+              )}
               <h3>
                 {c.nombre} <span className="gf-tag">{c.formula}</span>
               </h3>
